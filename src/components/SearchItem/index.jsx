@@ -1,25 +1,20 @@
 import React, { useEffect, useState, useRef } from "react";
-
-import { AutoComplete, Input } from "antd";
+import { AutoComplete, Input, Space, Spin } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { crud } from "@/redux/crud/actions";
 import { request } from "@/request";
-import { useCrudContext } from "@/context/crud";
 import { selectSearchedItems } from "@/redux/crud/selectors";
 
 import { Empty } from "antd";
 
 export default function SearchItem({ config }) {
-  let { entity, searchConfig } = config;
+  let { entity, searchConfig, onSelect } = config;
 
   const { displayLabels, searchFields, outputValue = "_id" } = searchConfig;
   const dispatch = useDispatch();
   const [value, setValue] = useState("");
   const [options, setOptions] = useState([]);
-
-  const { crudContextAction } = useCrudContext();
-  const { panel, collapsedBox, readBox } = crudContextAction;
 
   let source = request.source();
   const { result, isLoading, isSuccess } = useSelector(selectSearchedItems);
@@ -28,7 +23,17 @@ export default function SearchItem({ config }) {
 
   let delayTimer = null;
   useEffect(() => {
-    isLoading && setOptions([{ label: "... Searching" }]);
+    isLoading &&
+      setOptions([
+        {
+          label: (
+            <Space align="center">
+              <Spin />
+              Searching
+            </Space>
+          ),
+        },
+      ]);
   }, [isLoading]);
   const onSearch = (searchText) => {
     isTyping.current = true;
@@ -44,18 +49,7 @@ export default function SearchItem({ config }) {
         );
       }
       isTyping.current = false;
-    }, 500);
-  };
-
-  const onSelect = (data) => {
-    const currentItem = result.find((item) => {
-      return item[outputValue] === data;
-    });
-
-    dispatch(crud.currentItem(currentItem));
-    panel.open();
-    collapsedBox.open();
-    readBox.open();
+    }, 700);
   };
 
   const onChange = (data) => {
@@ -89,9 +83,9 @@ export default function SearchItem({ config }) {
       onChange={onChange}
       notFoundContent={!isSuccess ? <Empty /> : ""}
       allowClear={true}
-      placeholder="Your Search here"
+      placeholder="Search Items"
     >
-      <Input suffix={<SearchOutlined />} />
+      <Input suffix={<SearchOutlined />} clearableInput />
     </AutoComplete>
   );
 }

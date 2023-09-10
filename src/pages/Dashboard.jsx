@@ -12,7 +12,7 @@ const TopCard = ({ title, tagContent, tagColor, prefix }) => {
   return (
     <Col className="gutter-row" span={6}>
       <div
-        className="whiteBox shadow"
+        className="whiteBox"
         style={{ color: "#595959", fontSize: 13, height: "106px" }}
       >
         <div
@@ -169,7 +169,7 @@ export default function Dashboard() {
       <div className="space30"></div>
       <Row gutter={[24, 24]}>
         <Col className="gutter-row" span={18}>
-          <div className="whiteBox shadow" style={{ height: "380px" }}>
+          <div className="whiteBox" style={{ height: "380px" }}>
             <Row className="pad10" gutter={[0, 0]}>
               <Col className="gutter-row" span={8}>
                 <div className="pad15">
@@ -229,7 +229,7 @@ export default function Dashboard() {
         </Col>
 
         <Col className="gutter-row" span={6}>
-          <div className="whiteBox shadow" style={{ height: "380px" }}>
+          <div className="whiteBox" style={{ height: "380px" }}>
             <div
               className="pad20"
               style={{ textAlign: "center", justifyContent: "center" }}
@@ -256,7 +256,7 @@ export default function Dashboard() {
       <div className="space30"></div>
       <Row gutter={[24, 24]}>
         <Col className="gutter-row" span={12}>
-          <div className="whiteBox shadow">
+          <div className="whiteBox">
             <div className="pad20">
               <h3 style={{ color: "#22075e", marginBottom: 5 }}>
                 Recent Leads
@@ -268,7 +268,7 @@ export default function Dashboard() {
         </Col>
 
         <Col className="gutter-row" span={12}>
-          <div className="whiteBox shadow">
+          <div className="whiteBox">
             <div className="pad20">
               <h3 style={{ color: "#22075e", marginBottom: 5 }}>
                 Recent Products
