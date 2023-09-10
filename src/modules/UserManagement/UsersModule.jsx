@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styles from "./userManagement.module.less";
-import { Button, Card, PageHeader, Space, Table, Tag } from "antd";
+import { Button, Card, Modal, PageHeader, Space, Table, Tag } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { crud } from "@/redux/crud/actions";
 import { selectListItems } from "@/redux/crud/selectors";
@@ -12,12 +12,21 @@ import {
   UserAddOutlined,
 } from "@ant-design/icons";
 import SearchItem from "@/components/SearchItem";
+import { ADD_USER, EDIT_USER } from "./constants/userConstants";
+import AddOrEditUsers from "./components/AddOrEditUsers/AddOrEditUsers";
+
+const initialState = {
+  type: null,
+  isOpen: false,
+  data: null,
+};
 
 const UserManagement = () => {
   const entity = "admin";
+  const [open, setOpen] = useState(true);
   const { result: listResult, isLoading: listIsLoading } =
     useSelector(selectListItems);
-
+  const [addEditModal, setAddOrEditModal] = useState(initialState);
   const { pagination, items } = listResult;
 
   const dispatch = useDispatch();
@@ -27,6 +36,10 @@ const UserManagement = () => {
       dispatch(crud.list(entity, pagination.current));
     }
   }, []);
+
+  const handleAddOrEditUser = (type, data) => {
+    setAddOrEditModal({ type: type, isOpen: true, data: data || null });
+  };
 
   const columns = [
     {
@@ -61,12 +74,19 @@ const UserManagement = () => {
       title: "Actions",
 
       key: "actions",
-      render: (row) => (
+      render: (rowData) => (
         <Space align="end">
-          <Button icon={<EditFilled />} onClick={handleEdit(row)}>
+          <Button
+            icon={<EditFilled />}
+            onClick={() => handleAddOrEditUser(EDIT_USER, rowData)}
+          >
             Edit
           </Button>
-          <Button danger onClick={handleDelete(row)} icon={<DeleteFilled />}>
+          <Button
+            danger
+            onClick={() => handleDelete(rowData)}
+            icon={<DeleteFilled />}
+          >
             Remove
           </Button>
         </Space>
@@ -74,14 +94,14 @@ const UserManagement = () => {
     },
   ];
 
-  const handleEdit = (row) => {};
-
-  const handleDelete = (row) => {};
-
-  const handleAddUser = () => {};
+  const handleDelete = (id) => {};
 
   const onSearchSelect = (row) => {
     console.log(row);
+  };
+
+  const onSubmit = (fieldsValue) => {
+    console.log(fieldsValue);
   };
 
   useEffect(() => {
@@ -89,7 +109,7 @@ const UserManagement = () => {
   }, []);
 
   return (
-    <div>
+    <>
       <Card className={styles.cardContainer}>
         <div className="tableWrapper">
           <PageHeader
@@ -100,7 +120,7 @@ const UserManagement = () => {
               <Button
                 type="primary"
                 icon={<UserAddOutlined />}
-                onClick={handleAddUser}
+                onClick={() => handleAddOrEditUser(ADD_USER)}
               >
                 Add User
               </Button>,
@@ -126,7 +146,6 @@ const UserManagement = () => {
               onSelect: onSearchSelect,
             }}
           />
-          ,
           <Table
             columns={columns}
             rowKey={(item) => item._id}
@@ -137,7 +156,19 @@ const UserManagement = () => {
           />
         </div>
       </Card>
-    </div>
+      <AddOrEditUsers
+        title={
+          addEditModal?.type === ADD_USER ? "Add New User" : "Edit User Details"
+        }
+        onSubmit={onSubmit}
+        type={addEditModal?.type}
+        data={addEditModal?.data}
+        visible={addEditModal?.isOpen}
+        onCancel={() => setAddOrEditModal(initialState)}
+        centered
+        okText={addEditModal?.type === ADD_USER ? "Add User" : "Update User"}
+      />
+    </>
   );
 };
 

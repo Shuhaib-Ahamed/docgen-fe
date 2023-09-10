@@ -65,6 +65,7 @@ export default function UpdateForm({ config, formElements }) {
   const show = isEditBoxOpen
     ? { display: "block", opacity: 1 }
     : { display: "none", opacity: 0 };
+    
   return (
     <div style={show}>
       <Loading isLoading={isLoading}>

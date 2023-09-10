@@ -6,6 +6,8 @@ import {
   SettingOutlined,
   DashboardOutlined,
   TeamOutlined,
+  FileOutlined,
+  ThunderboltOutlined,
 } from "@ant-design/icons";
 
 import LOGO from "@/assets/images/logo.svg";
@@ -30,18 +32,27 @@ function Navigation() {
       icon: <DashboardOutlined />,
     },
     {
+      label: "Documents",
+      path: "/documents",
+      icon: <FileOutlined />,
+    },
+    {
+      label: "Generate",
+      path: "/generate",
+      icon: <ThunderboltOutlined />,
+    },
+    {
       label: "User Management",
       path: "/users",
       icon: <TeamOutlined />,
     },
+
     {
       label: " Settings",
       path: "/settings",
       icon: <SettingOutlined />,
     },
   ];
-
-  console.log(location.pathname);
 
   return (
     <Sider

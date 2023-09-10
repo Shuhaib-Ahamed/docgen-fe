@@ -12,6 +12,14 @@ const Admin = lazy(() =>
   import(/*webpackChunkName:'AdminPage'*/ "@/pages/Admin")
 );
 
+const Documents = lazy(() =>
+  import(/*webpackChunkName:'AdminPage'*/ "@/pages/Documents")
+);
+
+const Generate = lazy(() =>
+  import(/*webpackChunkName:'AdminPage'*/ "@/pages/Generate")
+);
+
 const Logout = lazy(() =>
   import(/*webpackChunkName:'LogoutPage'*/ "@/pages/Logout")
 );
@@ -28,6 +36,9 @@ export default function AppRouter() {
         <Switch location={location} key={location.pathname}>
           <PrivateRoute path="/" component={Dashboard} exact />
           <PrivateRoute component={Admin} path="/users" exact />
+          <PrivateRoute component={Admin} path="/settings" exact />
+          <PrivateRoute component={Documents} path="/documents" exact />
+          <PrivateRoute component={Generate} path="/generate" exact />
           <PrivateRoute component={Logout} path="/logout" exact />
           <PublicRoute path="/login" render={() => <Redirect to="/" />} />
           <Route
