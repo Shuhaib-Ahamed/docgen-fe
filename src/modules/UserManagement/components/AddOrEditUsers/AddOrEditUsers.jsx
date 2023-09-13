@@ -17,36 +17,30 @@ const AddOrEditUsers = (props) => {
     useSelector(selectCreatedItem);
   const { isLoading: isUpdateLoading, isSuccess: isUpdateSuccess } =
     useSelector(selectUpdatedItem);
-  const { isLoading: isListLoading } = useSelector(selectListItems);
 
   const dispatch = useDispatch();
   const { entity, title, data, visible, onSubmit, onCancel, type, ...rest } =
     props;
 
   const handleSubmit = () => {
-    try {
-      form.submit();
-      if (form.validateFields()) {
-        if (type === ADD_USER) {
-          const formFields = form.getFieldsValue([
-            "email",
-            "name",
-            "surname",
-            "password",
-          ]);
-          dispatch(crud.create(entity, formFields));
-        } else if (type === EDIT_USER && data?._id) {
-          const formFields = form.getFieldsValue(["email", "name", "surname"]);
-          const { _id, __v, removed, isLoggedIn, enabled, createdAt, ...prev } =
-            data;
-          if (JSON.stringify(prev) !== JSON.stringify(formFields)) {
-            dispatch(crud.update(entity, data?._id, formFields));
-          }
+    form.submit();
+    if (form.validateFields()) {
+      if (type === ADD_USER) {
+        const formFields = form.getFieldsValue([
+          "email",
+          "name",
+          "surname",
+          "password",
+        ]);
+        dispatch(crud.create(entity, formFields));
+      } else if (type === EDIT_USER && data?._id) {
+        const formFields = form.getFieldsValue(["email", "name", "surname"]);
+        const { _id, __v, removed, isLoggedIn, enabled, createdAt, ...prev } =
+          data;
+        if (JSON.stringify(prev) !== JSON.stringify(formFields)) {
+          dispatch(crud.update(entity, data?._id, formFields));
         }
       }
-    } catch (error) {
-    } finally {
-      onCancel();
     }
   };
 
@@ -63,6 +57,12 @@ const AddOrEditUsers = (props) => {
       form.resetFields();
     };
   }, [data]);
+
+  useEffect(() => {
+    if (isCreateSuccess || isUpdateSuccess) {
+      onCancel();
+    }
+  }, [isCreateSuccess, isUpdateSuccess]);
 
   useLayoutEffect(() => {
     dispatch(crud.resetState());

@@ -3,7 +3,7 @@ import styles from "./userManagement.module.less";
 import { Button, Card, Modal, PageHeader, Space, Table, Tag } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { crud } from "@/redux/crud/actions";
-import { selectListItems } from "@/redux/crud/selectors";
+import { selectDeletedItem, selectListItems } from "@/redux/crud/selectors";
 import {
   DeleteFilled,
   EditFilled,
@@ -14,6 +14,7 @@ import {
 import SearchItem from "@/components/SearchItem";
 import { ADD_USER, EDIT_USER } from "./constants/userConstants";
 import AddOrEditUsers from "./components/AddOrEditUsers/AddOrEditUsers";
+import DeleteModal from "@/components/DeleteModal";
 
 const initialState = {
   type: null,
@@ -21,11 +22,19 @@ const initialState = {
   data: null,
 };
 
+const initialDeleteState = {
+  isModalOpen: false,
+  selectedId: null,
+  name: undefined,
+};
+
 const UserManagement = () => {
   const entity = "admin";
   const { result: listResult, isLoading: listIsLoading } =
     useSelector(selectListItems);
   const [addEditModal, setAddOrEditModal] = useState(initialState);
+  const [deleteModalConfig, setDeleteModalConfig] =
+    useState(initialDeleteState);
   const { pagination, items } = listResult;
 
   const dispatch = useDispatch();
@@ -38,6 +47,25 @@ const UserManagement = () => {
 
   const handleAddOrEditUser = (type, data) => {
     setAddOrEditModal({ type: type, isOpen: true, data: data || null });
+  };
+
+  const handleDelete = (data) => {
+    setDeleteModalConfig({
+      isModalOpen: true,
+      selectedId: data?._id,
+      name: data?.email,
+    });
+  };
+
+  const onCancelDelete = () => {
+    setDeleteModalConfig(initialState);
+  };
+
+  const onSearchSelect = (id) => {
+    const rowData = items?.find((item) => item._id === id);
+    setTimeout(() => {
+      handleAddOrEditUser(EDIT_USER, rowData);
+    }, 300);
   };
 
   const columns = [
@@ -92,15 +120,6 @@ const UserManagement = () => {
       ),
     },
   ];
-
-  const handleDelete = (id) => {};
-
-  const onSearchSelect = (id) => {
-    const rowData = items?.find((item) => item._id === id);
-    setTimeout(() => {
-      handleAddOrEditUser(EDIT_USER, rowData);
-    }, 300);
-  };
 
   useEffect(() => {
     dispatch(crud.list(entity));
@@ -167,6 +186,15 @@ const UserManagement = () => {
         onCancel={() => setAddOrEditModal(initialState)}
         centered
         okText={addEditModal?.type === ADD_USER ? "Add User" : "Update User"}
+      />
+      <DeleteModal
+        entity={entity}
+        modalTitle="Delete User"
+        isModalOpen={deleteModalConfig?.isModalOpen}
+        displayItem={deleteModalConfig?.name}
+        id={deleteModalConfig?.selectedId}
+        handleCancel={onCancelDelete}
+        deleteMessage="Are you sure you want to delete : "
       />
     </>
   );
