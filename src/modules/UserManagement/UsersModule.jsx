@@ -23,7 +23,6 @@ const initialState = {
 
 const UserManagement = () => {
   const entity = "admin";
-  const [open, setOpen] = useState(true);
   const { result: listResult, isLoading: listIsLoading } =
     useSelector(selectListItems);
   const [addEditModal, setAddOrEditModal] = useState(initialState);
@@ -96,12 +95,11 @@ const UserManagement = () => {
 
   const handleDelete = (id) => {};
 
-  const onSearchSelect = (row) => {
-    console.log(row);
-  };
-
-  const onSubmit = (fieldsValue) => {
-    console.log(fieldsValue);
+  const onSearchSelect = (id) => {
+    const rowData = items?.find((item) => item._id === id);
+    setTimeout(() => {
+      handleAddOrEditUser(EDIT_USER, rowData);
+    }, 300);
   };
 
   useEffect(() => {
@@ -135,17 +133,19 @@ const UserManagement = () => {
               padding: "20px 0px",
             }}
           ></PageHeader>
-          <SearchItem
-            config={{
-              entity: entity,
-              searchConfig: {
-                displayLabels: ["name", "surname"],
-                searchFields: "email,name,surname",
-                outputValue: "_id",
-              },
-              onSelect: onSearchSelect,
-            }}
-          />
+          <Card>
+            <SearchItem
+              config={{
+                entity: entity,
+                searchConfig: {
+                  displayLabels: ["name", "surname"],
+                  searchFields: "email,name,surname",
+                  outputValue: "_id",
+                },
+                onSelect: onSearchSelect,
+              }}
+            />
+          </Card>
           <Table
             columns={columns}
             rowKey={(item) => item._id}
@@ -160,7 +160,7 @@ const UserManagement = () => {
         title={
           addEditModal?.type === ADD_USER ? "Add New User" : "Edit User Details"
         }
-        onSubmit={onSubmit}
+        entity={entity}
         type={addEditModal?.type}
         data={addEditModal?.data}
         visible={addEditModal?.isOpen}

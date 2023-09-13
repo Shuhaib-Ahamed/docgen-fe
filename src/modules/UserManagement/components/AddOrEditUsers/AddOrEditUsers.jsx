@@ -1,20 +1,53 @@
-import React, { useEffect } from "react";
-import { Button, Form, Input, Modal, Space } from "antd";
+import React, { useEffect, useLayoutEffect } from "react";
+import { Form, Input, Modal } from "antd";
+import { ADD_USER, EDIT_USER } from "../../constants/userConstants";
+import { useDispatch, useSelector } from "react-redux";
+import { crud } from "@/redux/crud/actions";
 import Loading from "@/components/Loading";
-import { selectUpdatedItem } from "@/redux/crud/selectors";
-import { EDIT_USER } from "../../constants/userConstants";
-import { useSelector } from "react-redux";
+import {
+  selectCreatedItem,
+  selectListItems,
+  selectUpdatedItem,
+} from "@/redux/crud/selectors";
 import styles from "./addOrEdit.module.less";
 
 const AddOrEditUsers = (props) => {
   const [form] = Form.useForm();
-  const { title, data, visible, onSubmit, type, ...rest } = props;
+  const { isLoading: isCreateLoading, isSuccess: isCreateSuccess } =
+    useSelector(selectCreatedItem);
+  const { isLoading: isUpdateLoading, isSuccess: isUpdateSuccess } =
+    useSelector(selectUpdatedItem);
+  const { isLoading: isListLoading } = useSelector(selectListItems);
 
-  const { current, isLoading, isSuccess } = useSelector(selectUpdatedItem);
+  const dispatch = useDispatch();
+  const { entity, title, data, visible, onSubmit, onCancel, type, ...rest } =
+    props;
 
   const handleSubmit = () => {
-    form.submit();
-    console.log(form.getFieldsValue(["name", "email", "surname", "password"]));
+    try {
+      form.submit();
+      if (form.validateFields()) {
+        if (type === ADD_USER) {
+          const formFields = form.getFieldsValue([
+            "email",
+            "name",
+            "surname",
+            "password",
+          ]);
+          dispatch(crud.create(entity, formFields));
+        } else if (type === EDIT_USER && data?._id) {
+          const formFields = form.getFieldsValue(["email", "name", "surname"]);
+          const { _id, __v, removed, isLoggedIn, enabled, createdAt, ...prev } =
+            data;
+          if (JSON.stringify(prev) !== JSON.stringify(formFields)) {
+            dispatch(crud.update(entity, data?._id, formFields));
+          }
+        }
+      }
+    } catch (error) {
+    } finally {
+      onCancel();
+    }
   };
 
   useEffect(() => {
@@ -23,7 +56,6 @@ const AddOrEditUsers = (props) => {
         name: data?.name,
         surname: data?.surname,
         email: data?.email,
-        password: "******************",
       });
     }
 
@@ -32,15 +64,20 @@ const AddOrEditUsers = (props) => {
     };
   }, [data]);
 
+  useLayoutEffect(() => {
+    dispatch(crud.resetState());
+  }, []);
+
   return (
     <Modal
       title={title}
       visible={visible}
       onOk={() => handleSubmit()}
+      onCancel={onCancel}
       destroyOnClose
       {...rest}
     >
-      <Loading isLoading={isLoading}>
+      <Loading isLoading={isCreateLoading || isUpdateLoading}>
         <Form form={form} layout="vertical">
           <Form.Item
             label="First Name"
@@ -76,18 +113,21 @@ const AddOrEditUsers = (props) => {
           >
             <Input autoComplete="off" />
           </Form.Item>
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: "Please input your Password!",
-              },
-            ]}
-          >
-            <Input type="password" autoComplete="off" />
-          </Form.Item>
+
+          {type === ADD_USER && (
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your Password!",
+                },
+              ]}
+            >
+              <Input type="password" autoComplete="off" />
+            </Form.Item>
+          )}
         </Form>
       </Loading>
     </Modal>

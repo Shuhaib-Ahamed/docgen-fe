@@ -27,44 +27,48 @@ export const crud = {
       payload: { ...data },
     });
   },
-  list: (entity, currentPage = 1) => async (dispatch) => {
-    dispatch({
-      type: actionTypes.REQUEST_LOADING,
-      keyState: "list",
-      payload: null,
-    });
-
-    let data = await request.list(entity, { page: currentPage });
-
-    if (data.success === true) {
-      const result = {
-        items: data.result,
-        pagination: {
-          current: parseInt(data.pagination.page, 10),
-          pageSize: 10,
-          total: parseInt(data.pagination.count, 10),
-        },
-      };
+  
+  list:
+    (entity, currentPage = 1) =>
+    async (dispatch) => {
       dispatch({
-        type: actionTypes.REQUEST_SUCCESS,
-        keyState: "list",
-        payload: result,
-      });
-    } else {
-      dispatch({
-        type: actionTypes.REQUEST_FAILED,
+        type: actionTypes.REQUEST_LOADING,
         keyState: "list",
         payload: null,
       });
-    }
-  },
+
+      let data = await request.list(entity, { page: currentPage });
+
+      if (data.success === true) {
+        const result = {
+          items: data.result,
+          pagination: {
+            current: parseInt(data.pagination.page, 10),
+            pageSize: 10,
+            total: parseInt(data.pagination.count, 10),
+          },
+        };
+        dispatch({
+          type: actionTypes.REQUEST_SUCCESS,
+          keyState: "list",
+          payload: result,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.REQUEST_FAILED,
+          keyState: "list",
+          payload: null,
+        });
+      }
+    },
+
   create: (entity, jsonData) => async (dispatch) => {
     dispatch({
       type: actionTypes.REQUEST_LOADING,
       keyState: "create",
       payload: null,
     });
-    console.log("jsonData action redux", jsonData);
+
     let data = await request.create(entity, jsonData);
 
     if (data.success === true) {
@@ -78,6 +82,7 @@ export const crud = {
         type: actionTypes.CURRENT_ITEM,
         payload: data.result,
       });
+      await dispatch(crud.list(entity));
     } else {
       dispatch({
         type: actionTypes.REQUEST_FAILED,
@@ -86,6 +91,7 @@ export const crud = {
       });
     }
   },
+
   read: (entity, itemId) => async (dispatch) => {
     dispatch({
       type: actionTypes.REQUEST_LOADING,
@@ -113,6 +119,7 @@ export const crud = {
       });
     }
   },
+
   update: (entity, itemId, jsonData) => async (dispatch) => {
     dispatch({
       type: actionTypes.REQUEST_LOADING,
@@ -132,6 +139,8 @@ export const crud = {
         type: actionTypes.CURRENT_ITEM,
         payload: data.result,
       });
+
+      await dispatch(crud.list(entity));
     } else {
       dispatch({
         type: actionTypes.REQUEST_FAILED,

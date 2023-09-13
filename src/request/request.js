@@ -19,7 +19,7 @@ const request = {
     axiosInstance.defaults.headers = {
       ...headersInstance,
     };
-    console.log("jsonData", jsonData);
+
     try {
       const response = await axiosInstance.post(entity + "/create", jsonData);
       return successHandler(response);
@@ -43,7 +43,7 @@ const request = {
       ...headersInstance,
     };
     try {
-      const response = await axiosInstance.patch(
+      const response = await axiosInstance.put(
         entity + "/update/" + id,
         jsonData
       );
@@ -145,6 +145,7 @@ const request = {
       return errorHandler(error);
     }
   },
+
   patch: async (entityUrl, jsonData) => {
     axiosInstance.defaults.headers = {
       ...headersInstance,
@@ -156,6 +157,7 @@ const request = {
       return errorHandler(error);
     }
   },
+
   source: () => {
     // const CancelToken = await axiosInstance.CancelToken;
 

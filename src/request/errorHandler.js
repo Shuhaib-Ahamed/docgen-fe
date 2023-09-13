@@ -6,13 +6,13 @@ const errorHandler = (error, emptyResult = null) => {
   const { response } = error;
 
   if (!response) {
-    // notification.config({
-    //   duration: 20,
-    // });
-    // notification.error({
-    //   message: "No internet connection",
-    //   description: "Cannot connect to the server, Check your internet network",
-    // });
+    notification.config({
+      duration: 20,
+    });
+    notification.error({
+      message: "No internet connection",
+      description: "Cannot connect to the server, Check your internet network",
+    });
     return {
       success: false,
       result: emptyResult,
@@ -29,6 +29,7 @@ const errorHandler = (error, emptyResult = null) => {
       message: `Request error ${status}`,
       description: errorText,
     });
+
     if (error.response.data.jwtExpired) {
       history.push("/logout");
     }

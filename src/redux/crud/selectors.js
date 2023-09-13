@@ -11,6 +11,7 @@ export const selectListItems = createSelector(
   [selectCrud],
   (crud) => crud.list
 );
+
 export const selectItemById = (itemId) =>
   createSelector(selectListItems, (list) =>
     list.result.items.find((item) => item._id === itemId)
