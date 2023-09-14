@@ -1,5 +1,4 @@
-// export { default as AuthRouter } from "./AuthRouter";
-// export { default as AppRouter } from "./AppRouter";
+
 import React, { useEffect } from "react";
 
 import AuthRouter from "./AuthRouter";

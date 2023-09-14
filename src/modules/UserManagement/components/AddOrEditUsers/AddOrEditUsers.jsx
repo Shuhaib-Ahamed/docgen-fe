@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect } from "react";
-import { Form, Input, Modal } from "antd";
-import { ADD_USER, EDIT_USER } from "../../constants/userConstants";
+import { Form, Input, Modal, Select } from "antd";
+import { ADD_USER, EDIT_USER, ROLE } from "../../constants/userConstants";
 import { useDispatch, useSelector } from "react-redux";
 import { crud } from "@/redux/crud/actions";
 import Loading from "@/components/Loading";
@@ -29,12 +29,12 @@ const AddOrEditUsers = (props) => {
         const formFields = form.getFieldsValue([
           "email",
           "name",
-          "surname",
           "password",
+          "role",
         ]);
         dispatch(crud.create(entity, formFields));
       } else if (type === EDIT_USER && data?._id) {
-        const formFields = form.getFieldsValue(["email", "name", "surname"]);
+        const formFields = form.getFieldsValue(["email", "name", "role"]);
         const { _id, __v, removed, isLoggedIn, enabled, createdAt, ...prev } =
           data;
         if (JSON.stringify(prev) !== JSON.stringify(formFields)) {
@@ -48,8 +48,8 @@ const AddOrEditUsers = (props) => {
     if (data != null) {
       form.setFieldsValue({
         name: data?.name,
-        surname: data?.surname,
         email: data?.email,
+        role: data?.role,
       });
     }
 
@@ -61,6 +61,7 @@ const AddOrEditUsers = (props) => {
   useEffect(() => {
     if (isCreateSuccess || isUpdateSuccess) {
       onCancel();
+      dispatch(crud.resetState());
     }
   }, [isCreateSuccess, isUpdateSuccess]);
 
@@ -91,15 +92,21 @@ const AddOrEditUsers = (props) => {
             <Input autoComplete="off" />
           </Form.Item>
           <Form.Item
-            label="Last Name"
-            name="surname"
+            label="User Role"
+            name="role"
             rules={[
               {
                 required: true,
               },
             ]}
           >
-            <Input autoComplete="off" />
+            <Select
+              defaultValue={ROLE.USER}
+              options={[
+                { value: ROLE.ADMIN, label: "Admin" },
+                { value: ROLE.USER, label: "User" },
+              ]}
+            />
           </Form.Item>
           <Form.Item
             label="E-mail"

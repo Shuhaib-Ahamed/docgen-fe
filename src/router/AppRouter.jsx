@@ -4,6 +4,7 @@ import { AnimatePresence } from "framer-motion";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import PageLoader from "@/components/PageLoader";
+import AdminOnlyRoute from "./AdminOnlyRoute";
 
 const Dashboard = lazy(() =>
   import(/*webpackChunkName:'DashboardPage'*/ "@/pages/Dashboard")
@@ -35,7 +36,7 @@ export default function AppRouter() {
       <AnimatePresence exitBeforeEnter initial={false}>
         <Switch location={location} key={location.pathname}>
           <PrivateRoute path="/" component={Dashboard} exact />
-          <PrivateRoute component={Admin} path="/users" exact />
+          <AdminOnlyRoute component={Admin} path="/users" exact />
           <PrivateRoute component={Admin} path="/settings" exact />
           <PrivateRoute component={Documents} path="/documents" exact />
           <PrivateRoute component={Generate} path="/generate" exact />

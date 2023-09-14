@@ -5,6 +5,7 @@ import { Route, Redirect } from "react-router-dom";
 import * as authService from "@/auth";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
+  
   // const config = {
   //   type: "spring",
   //   damping: 20,

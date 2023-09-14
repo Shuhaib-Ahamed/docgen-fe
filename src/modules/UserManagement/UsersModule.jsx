@@ -12,7 +12,7 @@ import {
   UserAddOutlined,
 } from "@ant-design/icons";
 import SearchItem from "@/components/SearchItem";
-import { ADD_USER, EDIT_USER } from "./constants/userConstants";
+import { ADD_USER, EDIT_USER, ROLE } from "./constants/userConstants";
 import AddOrEditUsers from "./components/AddOrEditUsers/AddOrEditUsers";
 import DeleteModal from "@/components/DeleteModal";
 
@@ -81,19 +81,22 @@ const UserManagement = () => {
       key: "email",
       sorter: (a, b) => a.email - b.email,
     },
-
     {
-      title: "Surname",
-      dataIndex: "surname",
-      key: "surname",
+      title: "Role",
+      dataIndex: "role",
+      key: "role",
+      sorter: (a, b) => a.role - b.role,
+      render: (_, { role }) => (
+        <Tag color={role === ROLE.USER ? "#108ee9" : "#87d068"}>{role}</Tag>
+      ),
     },
     {
       title: "Status",
-      dataIndex: "isRemoved",
-      key: "isRemoved",
-      render: (_, { isRemoved }) => (
-        <Tag color={isRemoved ? "orange" : "green"}>
-          {isRemoved ? "INACTIVE" : "ACTIVE"}
+      dataIndex: "enabled",
+      key: "enabled",
+      render: (_, { enabled }) => (
+        <Tag color={!enabled ? "red" : "green"}>
+          {!enabled ? "INACTIVE" : "ACTIVE"}
         </Tag>
       ),
     },
@@ -157,8 +160,8 @@ const UserManagement = () => {
               config={{
                 entity: entity,
                 searchConfig: {
-                  displayLabels: ["name", "surname"],
-                  searchFields: "email,name,surname",
+                  displayLabels: ["name"],
+                  searchFields: "email,name",
                   outputValue: "_id",
                 },
                 onSelect: onSearchSelect,
