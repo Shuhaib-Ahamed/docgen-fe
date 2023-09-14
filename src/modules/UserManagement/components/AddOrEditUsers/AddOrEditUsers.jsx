@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect } from "react";
-import { Form, Input, Modal, Select } from "antd";
+import { Form, Input, Modal, Select, notification } from "antd";
 import { ADD_USER, EDIT_USER, ROLE } from "../../constants/userConstants";
 import { useDispatch, useSelector } from "react-redux";
 import { crud } from "@/redux/crud/actions";
@@ -23,6 +23,10 @@ const AddOrEditUsers = (props) => {
     props;
 
   const handleSubmit = () => {
+    if (isCreateLoading || isUpdateLoading) {
+      return;
+    }
+
     form.submit();
     if (form.validateFields()) {
       if (type === ADD_USER) {
@@ -34,11 +38,18 @@ const AddOrEditUsers = (props) => {
         ]);
         dispatch(crud.create(entity, formFields));
       } else if (type === EDIT_USER && data?._id) {
-        const formFields = form.getFieldsValue(["email", "name", "role"]);
+        const formFields = form.getFieldsValue(["role", "email", "name"]);
         const { _id, __v, removed, isLoggedIn, enabled, createdAt, ...prev } =
           data;
+
         if (JSON.stringify(prev) !== JSON.stringify(formFields)) {
           dispatch(crud.update(entity, data?._id, formFields));
+        } else {
+          notification.warning({
+            message: "No changes were made!!",
+            description: "Please make any changes to update!",
+            duration: 20,
+          });
         }
       }
     }
@@ -91,15 +102,7 @@ const AddOrEditUsers = (props) => {
           >
             <Input autoComplete="off" />
           </Form.Item>
-          <Form.Item
-            label="User Role"
-            name="role"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
+          <Form.Item label="User Role" name="role">
             <Select
               defaultValue={ROLE.USER}
               options={[
