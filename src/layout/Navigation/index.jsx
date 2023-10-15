@@ -36,20 +36,15 @@ function Navigation() {
       icon: <DashboardOutlined />,
     },
     {
-      label: "Documents",
-      path: "/documents",
+      label: "Orders",
+      path: "/orders",
       icon: <FileOutlined />,
     },
-    {
-      label: "Generate",
-      path: "/generate",
-      icon: <ThunderboltOutlined />,
-    },
-    {
-      label: " Settings",
-      path: "/settings",
-      icon: <SettingOutlined />,
-    },
+    // {
+    //   label: " Settings",
+    //   path: "/settings",
+    //   icon: <SettingOutlined />,
+    // },
   ];
 
   const keysPrivate = [
@@ -59,14 +54,9 @@ function Navigation() {
       icon: <DashboardOutlined />,
     },
     {
-      label: "Documents",
-      path: "/documents",
+      label: "Orders",
+      path: "/orders",
       icon: <FileOutlined />,
-    },
-    {
-      label: "Generate",
-      path: "/generate",
-      icon: <ThunderboltOutlined />,
     },
     {
       label: "User Management",

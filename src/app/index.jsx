@@ -6,6 +6,9 @@ import history from "@/utils/history";
 import store from "@/redux/store";
 
 import { Button, ConfigProvider, Result } from "antd";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
 
 import useNetwork from "@/hooks/useNetwork";
 
@@ -38,7 +41,9 @@ function App() {
       >
         <RouterHistory history={history}>
           <Provider store={store}>
-            <Router />
+            <QueryClientProvider client={queryClient}>
+              <Router />
+            </QueryClientProvider>
           </Provider>
         </RouterHistory>
       </ConfigProvider>

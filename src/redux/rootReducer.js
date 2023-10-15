@@ -12,6 +12,7 @@ const appReducer = combineReducers({
   auth: authReducer,
   crud: crudReducer,
   search: searchReducer,
+  // order: orderReducer,
 });
 
 const rootReducer = (state, action) => {
