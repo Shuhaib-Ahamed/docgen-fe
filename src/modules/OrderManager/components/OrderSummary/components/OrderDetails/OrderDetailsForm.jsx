@@ -5,10 +5,12 @@ import ShippingDetails from "@/modules/OrderManager/components/OrderSummary/comp
 import styles from "./orderDetailsForm.module.less";
 import { Button, Col, Divider, Row } from "antd";
 import ContainerDetails from "../ContainerDetails/ContainerDetails";
+import FinancialDetails from "../FinacialDetails/FinancialDetails";
 
 const OrderDetailsForm = ({ setCurrentStep, onClose }) => {
   const shippingDetailsFormRef = useRef(null);
   const containerDetailsFormRef = useRef(null);
+  const orderDetailsFormRef = useRef(null);
 
   const handleOnClose = () => {
     onClose();
@@ -21,10 +23,13 @@ const OrderDetailsForm = ({ setCurrentStep, onClose }) => {
   function handleSubmit() {
     shippingDetailsFormRef?.current?.submitForm();
     containerDetailsFormRef?.current?.submitForm();
+    orderDetailsFormRef?.current?.submitForm();
+    setCurrentStep(3);
   }
 
   return (
     <div className={styles.shippingContainer}>
+      <FinancialDetails ref={orderDetailsFormRef} />
       <ShippingDetails ref={shippingDetailsFormRef} />
       <ContainerDetails ref={containerDetailsFormRef} />
 

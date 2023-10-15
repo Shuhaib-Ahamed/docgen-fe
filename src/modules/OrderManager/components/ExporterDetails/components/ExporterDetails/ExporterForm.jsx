@@ -1,7 +1,7 @@
 import { Button, Col, Divider, Form, Input, Row, Select } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
 import { expDetails } from "../../constants/constants";
-import { countries } from "@/request/countries";
+import { countries } from "@/utils/countries";
 
 const { Option } = Select;
 import styles from "./exporterForm.module.less";

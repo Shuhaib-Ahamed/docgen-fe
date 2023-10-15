@@ -3,7 +3,7 @@ import React, { Fragment, useEffect } from "react";
 import { impDetails } from "@/modules/OrderManager/components/ImporterDetails/constants/constants";
 
 import styles from "./importerForm.module.less";
-import { countries } from "@/request/countries";
+import { countries } from "@/utils/countries";
 
 const { Option } = Select;
 
