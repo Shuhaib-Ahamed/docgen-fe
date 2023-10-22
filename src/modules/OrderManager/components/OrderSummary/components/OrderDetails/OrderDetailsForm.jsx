@@ -1,17 +1,17 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 import ShippingDetails from "@/modules/OrderManager/components/OrderSummary/components/ShippingDetails/ShippingDetails";
-
-import styles from "./orderDetailsForm.module.less";
 import { Button, Col, Divider, Row } from "antd";
 import ContainerDetails from "../ContainerDetails/ContainerDetails";
 import FinancialDetails from "../FinacialDetails/FinancialDetails";
 import { getOrder } from "@/redux/order/selectors";
 import { useSelector } from "react-redux";
+import { isEmpty } from "lodash";
+
+import styles from "./orderDetailsForm.module.less";
 
 const OrderDetailsForm = ({ setCurrentStep, onClose }) => {
-  const { isLoading, order } = useSelector(getOrder);
-  const [isFormValid, setIsFormValid] = useState(false);
+  const { isLoading, shipping, finance, container } = useSelector(getOrder);
   const shippingDetailsFormRef = useRef(null);
   const containerDetailsFormRef = useRef(null);
   const orderDetailsFormRef = useRef(null);
@@ -40,6 +40,12 @@ const OrderDetailsForm = ({ setCurrentStep, onClose }) => {
     } finally {
     }
   }
+
+  useEffect(() => {
+    if (!isEmpty(shipping) && !isEmpty(finance) && !isEmpty(container)) {
+      setCurrentStep(3);
+    }
+  }, [shipping, finance, container]);
 
   return (
     <div className={styles.shippingContainer}>

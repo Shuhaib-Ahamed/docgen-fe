@@ -8,9 +8,7 @@ import styles from "./order.module.less";
 
 const Step = Steps.Step;
 
-const OrderBody = ({ onClose }) => {
-  const [current, setCurrent] = useState(0);
-
+const OrderBody = ({ onClose, setCurrent, current }) => {
   const setCurrentStep = (stepNumber) => {
     setCurrent(stepNumber);
   };

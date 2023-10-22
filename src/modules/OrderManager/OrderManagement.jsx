@@ -7,13 +7,16 @@ import styles from "./orderManagement.module.less";
 import OrderBody from "./components/OrderComponent/OrderBody";
 const OrderManagement = () => {
   const [open, setOpen] = useState(false);
+  const [current, setCurrent] = useState(0);
 
   const showDrawer = () => {
+    setCurrent(0);
     setOpen(true);
   };
 
   const onClose = () => {
     setOpen(false);
+    setCurrent(0);
   };
 
   return (
@@ -75,7 +78,11 @@ const OrderManagement = () => {
         open={open}
         extra={<CloseOutlined onClick={() => onClose()} />}
       >
-        <OrderBody onClose={onClose} />
+        <OrderBody
+          onClose={onClose}
+          current={current}
+          setCurrent={setCurrent}
+        />
       </Drawer>
     </>
   );
