@@ -1,10 +1,15 @@
 import { Col, Divider, Form, Input, InputNumber, Row } from "antd";
-import React, { forwardRef, useImperativeHandle } from "react";
-
+import React, { forwardRef, useEffect, useImperativeHandle } from "react";
+import { isEmpty } from "lodash";
 import styles from "./financialDetails.module.less";
 import TextArea from "antd/lib/input/TextArea";
+import { useDispatch, useSelector } from "react-redux";
+import { addFinanceDetails } from "@/redux/order/actions";
+import { getOrder } from "@/redux/order/selectors";
 
-const FinancialDetails = forwardRef((_, ref) => {
+const FinancialDetails = forwardRef((props, ref) => {
+  const { isLoading, finance } = useSelector(getOrder);
+  const dispatch = useDispatch();
   const [form] = Form.useForm();
 
   useImperativeHandle(
@@ -19,13 +24,17 @@ const FinancialDetails = forwardRef((_, ref) => {
     []
   );
 
-  const onFinish = (values) => {
-    const appendedValues = {
-      releaseDate: releaseDate,
-      ...values,
-    };
+  // useEffect(() => {
+  //   if (!isEmpty(finance)) {
+  //   }
+  // }, []);
 
-    console.log(appendedValues);
+  const onFinish = (values) => {
+    try {
+      if (!isEmpty(values)) dispatch(addFinanceDetails(values));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleTotalCount = () => {
@@ -41,9 +50,14 @@ const FinancialDetails = forwardRef((_, ref) => {
   };
 
   return (
-    <Form form={form} layout="vertical" onFinish={onFinish}>
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={onFinish}
+      disabled={isLoading}
+    >
       <h1 className={styles.subHeading}>Order Details</h1>
-      <Divider className={styles.divider} />{" "}
+      <Divider className={styles.divider} />
       <Row gutter={32}>
         <Col span={12}>
           <Form.Item
@@ -57,7 +71,7 @@ const FinancialDetails = forwardRef((_, ref) => {
           >
             <Input autoComplete="off" />
           </Form.Item>
-        </Col>{" "}
+        </Col>
         <Col span={12}>
           <Form.Item
             label="Specification / Grade"
@@ -70,8 +84,8 @@ const FinancialDetails = forwardRef((_, ref) => {
           >
             <Input autoComplete="off" />
           </Form.Item>
-        </Col>{" "}
-      </Row>{" "}
+        </Col>
+      </Row>
       <Row gutter={32}>
         <Col span={8}>
           <Form.Item

@@ -22,9 +22,8 @@ export default function DataTable({ config, DropDownRowMenu, AddNewItem }) {
     },
   ];
 
-  const { result: listResult, isLoading: listIsLoading } = useSelector(
-    selectListItems
-  );
+  const { result: listResult, isLoading: listIsLoading } =
+    useSelector(selectListItems);
 
   const { pagination, items } = listResult;
 

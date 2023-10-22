@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 
 import ShippingDetails from "@/modules/OrderManager/components/OrderSummary/components/ShippingDetails/ShippingDetails";
 
@@ -6,8 +6,12 @@ import styles from "./orderDetailsForm.module.less";
 import { Button, Col, Divider, Row } from "antd";
 import ContainerDetails from "../ContainerDetails/ContainerDetails";
 import FinancialDetails from "../FinacialDetails/FinancialDetails";
+import { getOrder } from "@/redux/order/selectors";
+import { useSelector } from "react-redux";
 
 const OrderDetailsForm = ({ setCurrentStep, onClose }) => {
+  const { isLoading, order } = useSelector(getOrder);
+  const [isFormValid, setIsFormValid] = useState(false);
   const shippingDetailsFormRef = useRef(null);
   const containerDetailsFormRef = useRef(null);
   const orderDetailsFormRef = useRef(null);
@@ -21,10 +25,20 @@ const OrderDetailsForm = ({ setCurrentStep, onClose }) => {
   };
 
   function handleSubmit() {
-    shippingDetailsFormRef?.current?.submitForm();
-    containerDetailsFormRef?.current?.submitForm();
-    orderDetailsFormRef?.current?.submitForm();
-    setCurrentStep(3);
+    try {
+      const formRefs = [
+        shippingDetailsFormRef,
+        containerDetailsFormRef,
+        orderDetailsFormRef,
+      ];
+
+      for (let formRef of formRefs) {
+        formRef?.current?.submitForm();
+      }
+    } catch (error) {
+      console.log("ERROR");
+    } finally {
+    }
   }
 
   return (
@@ -46,12 +60,16 @@ const OrderDetailsForm = ({ setCurrentStep, onClose }) => {
               type="primary"
               onClick={() => handleSubmit()}
               className={styles.nextButton}
+              loading={isLoading}
+              disabled={isLoading}
             >
               Next
             </Button>
           </Col>
         </Row>
-        <Button onClick={() => handleOnClose()}>Save as draft & close</Button>
+        <Button disabled={isLoading} onClick={() => handleOnClose()}>
+          Save as draft & close
+        </Button>
       </div>
     </div>
   );

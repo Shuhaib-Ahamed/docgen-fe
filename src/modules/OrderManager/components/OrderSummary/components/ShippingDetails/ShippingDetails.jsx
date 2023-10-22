@@ -6,13 +6,19 @@ import React, {
   useState,
   useEffect,
 } from "react";
+import { getOrder } from "@/redux/order/selectors";
+import { useDispatch, useSelector } from "react-redux";
+import { addShippmentDetails } from "@/redux/order/actions";
+import { isEmpty } from "lodash";
 
 import styles from "./shippingDetails.module.less";
 
 const { Option } = Select;
 
-const ShippingDetails = forwardRef((_, ref) => {
+const ShippingDetails = forwardRef((props, ref) => {
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const { isLoading, shipping } = useSelector(getOrder);
   const [portLoadCountry, setLoadCountry] = useState("Sri Lanka");
   const [portDischargeCountry, setDischargeCountry] = useState("Australia");
   const [departureDate, setDepartureDate] = useState();
@@ -29,8 +35,8 @@ const ShippingDetails = forwardRef((_, ref) => {
     []
   );
 
-  const onChange = (_, dateString) => {
-    setDepartureDate(dateString);
+  const onChange = (date) => {
+    setDepartureDate(date);
   };
 
   const onFinish = (values) => {
@@ -41,18 +47,35 @@ const ShippingDetails = forwardRef((_, ref) => {
       ...values,
     };
 
-    console.log(appendedValues);
+    try {
+      if (!isEmpty(appendedValues))
+        dispatch(addShippmentDetails(appendedValues));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
-    form?.setFieldsValue({
-      portLoadCountry: portLoadCountry,
-      portDischargeCountry: portDischargeCountry,
-    });
+    if (!isEmpty(shipping)) {
+      form?.setFieldsValue({
+        portLoadCountry: portLoadCountry,
+        portDischargeCountry: portDischargeCountry,
+      });
+    } else {
+      form?.setFieldsValue({
+        portLoadCountry: portLoadCountry,
+        portDischargeCountry: portDischargeCountry,
+      });
+    }
   }, []);
 
   return (
-    <Form form={form} layout="vertical" onFinish={onFinish}>
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={onFinish}
+      disabled={isLoading}
+    >
       <h1 className={styles.subHeading}>Shipping Details</h1>
       <Divider className={styles.divider} />{" "}
       <Row gutter={32}>
@@ -178,7 +201,6 @@ const ShippingDetails = forwardRef((_, ref) => {
                   setLoadCountry(e);
                   form.setFieldValue("portLoadCountry", e);
                 }}
-                defaultValue={"Sri Lanka"}
               >
                 {countries?.map((item, index) => (
                   <Option
@@ -231,7 +253,6 @@ const ShippingDetails = forwardRef((_, ref) => {
                   setDischargeCountry(e);
                   form.setFieldValue("portDischargeCountry", e);
                 }}
-                defaultValue={"Australia"}
               >
                 {countries.map((item, index) => (
                   <Option
@@ -251,33 +272,7 @@ const ShippingDetails = forwardRef((_, ref) => {
         </Row>
       </div>{" "}
       <Row gutter={32}>
-        <Col span={6}>
-          <Form.Item
-            label="FCL Size"
-            name="fclSize"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input autoComplete="off" />
-          </Form.Item>
-        </Col>{" "}
-        <Col span={6}>
-          <Form.Item
-            label="Number of FCL"
-            name="fclNo"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input autoComplete="off" />
-          </Form.Item>
-        </Col>{" "}
-        <Col span={6}>
+        <Col span={12}>
           <Form.Item
             label="Booking Reference"
             name="bookingRef"
@@ -290,7 +285,7 @@ const ShippingDetails = forwardRef((_, ref) => {
             <Input autoComplete="off" />
           </Form.Item>
         </Col>
-        <Col span={6}>
+        <Col span={12}>
           <Form.Item
             label="Sales Contract Number"
             name="salesContractNumber"

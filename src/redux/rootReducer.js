@@ -3,6 +3,7 @@ import { combineReducers } from "redux";
 import { reducer as authReducer } from "./auth";
 import { reducer as crudReducer } from "./crud";
 import { reducer as searchReducer } from "./search";
+import { reducer as orderReducer } from "./order";
 
 import * as actionTypes from "./auth/types";
 
@@ -12,7 +13,7 @@ const appReducer = combineReducers({
   auth: authReducer,
   crud: crudReducer,
   search: searchReducer,
-  // order: orderReducer,
+  order: orderReducer,
 });
 
 const rootReducer = (state, action) => {

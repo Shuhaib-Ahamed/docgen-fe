@@ -4,15 +4,22 @@ import { impDetails } from "@/modules/OrderManager/components/ImporterDetails/co
 
 import styles from "./importerForm.module.less";
 import { countries } from "@/utils/countries";
+import { useDispatch, useSelector } from "react-redux";
+import { updateOrderImporter } from "@/redux/order/actions";
+import { getOrder } from "@/redux/order/selectors";
+import { isEmpty } from "lodash";
 
 const { Option } = Select;
 
 const ImporterForm = ({ setCurrentStep, onClose }) => {
+  const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const { cuurentId, isLoading, importer } = useSelector(getOrder);
 
   const onFinish = (values) => {
     console.log(values);
     try {
+      dispatch(updateOrderImporter({ ...values }));
     } catch (error) {
     } finally {
       setCurrentStep(2);
@@ -28,17 +35,31 @@ const ImporterForm = ({ setCurrentStep, onClose }) => {
   };
 
   useEffect(() => {
-    form.setFieldsValue({
-      companyName: impDetails.companyName,
-      addressNo: impDetails.adressNo,
-      address: impDetails.address,
-      country: impDetails.country,
-    });
+    if (!isEmpty(importer)) {
+      form.setFieldsValue({
+        companyName: importer.companyName,
+        addressNo: importer.adressNo,
+        address: importer.address,
+        country: importer.country,
+      });
+    } else {
+      form.setFieldsValue({
+        companyName: impDetails.companyName,
+        addressNo: impDetails.adressNo,
+        address: impDetails.address,
+        country: impDetails.country,
+      });
+    }
   }, []);
 
   return (
     <Fragment>
-      <Form form={form} layout="vertical" onFinish={onFinish}>
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={onFinish}
+        disabled={isLoading}
+      >
         <Row gutter={32}>
           <Col span={24}>
             <Form.Item
@@ -95,7 +116,6 @@ const ImporterForm = ({ setCurrentStep, onClose }) => {
                 showSearch
                 placeholder="Country"
                 className={styles.dateLable}
-                defaultValue={"Sri Lanka"}
               >
                 {countries.map((item, index) => (
                   <Option

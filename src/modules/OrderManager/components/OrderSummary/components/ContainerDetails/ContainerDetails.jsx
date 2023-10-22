@@ -1,9 +1,19 @@
-import { Col, DatePicker, Divider, Form, Input, Row, Select } from "antd";
-import React, { forwardRef, useImperativeHandle, useState } from "react";
-
+import { Col, DatePicker, Divider, Form, Input, Row } from "antd";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
+import { getOrder } from "@/redux/order/selectors";
+import { useDispatch, useSelector } from "react-redux";
+import { isEmpty } from "lodash";
+import { addContainerDetails } from "@/redux/order/actions";
 import styles from "./containerDetails.module.less";
 
-const ContainerDetails = forwardRef((_, ref) => {
+const ContainerDetails = forwardRef((props, ref) => {
+  const { isLoading, container } = useSelector(getOrder);
+  const dispatch = useDispatch();
   const [form] = Form.useForm();
   const [releaseDate, setReleaseDate] = useState();
 
@@ -19,8 +29,8 @@ const ContainerDetails = forwardRef((_, ref) => {
     []
   );
 
-  const onChange = (_, dateString) => {
-    setReleaseDate(dateString);
+  const onChange = (date) => {
+    setReleaseDate(date);
   };
 
   const onFinish = (values) => {
@@ -29,11 +39,27 @@ const ContainerDetails = forwardRef((_, ref) => {
       ...values,
     };
 
-    console.log(appendedValues);
+    try {
+      if (!isEmpty(appendedValues))
+        dispatch(addContainerDetails(appendedValues));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
+  // useEffect(() => {
+  //   if (!isEmpty(container)) {
+  //     //Set values
+  //   }
+  // }, []);
+
   return (
-    <Form form={form} layout="vertical" onFinish={onFinish}>
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={onFinish}
+      disabled={isLoading}
+    >
       <h1 className={styles.subHeading}>Container Details</h1>
       <Divider className={styles.divider} />{" "}
       <Row gutter={32}>

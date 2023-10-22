@@ -31,6 +31,7 @@ const errorHandler = (error, emptyResult = null) => {
     });
 
     if (error.response.data.jwtExpired) {
+      localStorage.clear();
       history.push("/logout");
     }
     return response.data;
