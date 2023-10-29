@@ -1,5 +1,5 @@
 import React from "react";
-import ExporterForm from "./components/ExporterDetails/ExporterForm";
+import ExporterForm from "./components/ExporterForm";
 import { Divider } from "antd";
 
 import styles from "./exporter.module.less";

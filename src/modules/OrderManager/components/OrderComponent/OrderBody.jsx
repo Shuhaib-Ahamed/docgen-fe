@@ -3,6 +3,7 @@ import { Steps } from "antd";
 import Exporter from "@/modules/OrderManager/components/ExporterDetails/Exporter";
 import Importer from "@/modules/OrderManager/components/ImporterDetails/Importer";
 import OrderSummary from "@/modules/OrderManager/components/OrderSummary/OrderSummary";
+import PDFView from "../PDVviews/PDFView";
 
 import styles from "./order.module.less";
 
@@ -56,9 +57,27 @@ const OrderBody = ({ onClose, setCurrent, current }) => {
               </div>
             );
           case 3:
-            return <div className={styles.stepBody}>Review & Upload</div>;
+            return (
+              <div className={styles.stepBody}>
+                <div className={styles.stepBody}>
+                  <PDFView
+                    setCurrentStep={setCurrentStep}
+                    onClose={resetOnClose}
+                  />
+                </div>
+              </div>
+            );
           default:
-            return <div className={styles.stepBody}>Basic</div>;
+            return (
+              <div className={styles.stepBody}>
+                <div className={styles.stepBody}>
+                  <PDFView
+                    setCurrentStep={setCurrentStep}
+                    onClose={resetOnClose}
+                  />
+                </div>
+              </div>
+            );
         }
       })()}
     </div>

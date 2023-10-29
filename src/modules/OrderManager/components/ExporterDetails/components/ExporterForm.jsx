@@ -1,6 +1,6 @@
 import { Button, Col, Divider, Form, Input, Row, Select } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
-import { expDetails } from "../../constants/constants";
+import { expDetails } from "../constants/constants";
 import { countries } from "@/utils/countries";
 import { createOrder, updateExporter } from "@/redux/order/actions";
 const { Option } = Select;

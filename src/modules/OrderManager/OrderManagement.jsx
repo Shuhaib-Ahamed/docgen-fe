@@ -10,7 +10,7 @@ const OrderManagement = () => {
   const [current, setCurrent] = useState(0);
 
   const showDrawer = () => {
-    setCurrent(0);
+    setCurrent(3);
     setOpen(true);
   };
 
