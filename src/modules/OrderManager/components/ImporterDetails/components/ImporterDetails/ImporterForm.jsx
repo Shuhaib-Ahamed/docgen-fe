@@ -17,7 +17,6 @@ const ImporterForm = ({ setCurrentStep, onClose }) => {
   const { cuurentId, isLoading, importer } = useSelector(getOrder);
 
   const onFinish = (values) => {
-    console.log(values);
     try {
       dispatch(updateOrderImporter({ ...values }));
     } catch (error) {

@@ -2,9 +2,10 @@ import React from "react";
 import styles from "./footer.module.less";
 import { Col, Divider, Row } from "antd";
 
-const Footer = () => {
+const Footer = ({ divider = true }) => {
   return (
     <div className={styles.footerContainer}>
+      {divider && <Divider />}
       <Row gutter={12} justify={"space-between"}>
         <Col span={16}>
           <p

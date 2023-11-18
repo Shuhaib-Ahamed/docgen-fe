@@ -3,14 +3,17 @@ import { Button, Card, Drawer, PageHeader, Space } from "antd";
 
 import { CloseOutlined, UserAddOutlined } from "@ant-design/icons";
 import SearchItem from "@/components/SearchItem";
-import styles from "./orderManagement.module.less";
+
 import OrderBody from "./components/OrderComponent/OrderBody";
+
+import styles from "./orderManagement.module.less";
+
 const OrderManagement = () => {
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState(0);
 
   const showDrawer = () => {
-    setCurrent(3);
+    setCurrent(0);
     setOpen(true);
   };
 

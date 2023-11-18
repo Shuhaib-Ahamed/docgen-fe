@@ -187,6 +187,109 @@ const FinancialDetails = forwardRef((props, ref) => {
           </Form.Item>
         </Col>{" "}
       </Row>{" "}
+      <Row gutter={32}>
+        <Col span={8}>
+          <Form.Item
+            label="Invoice Number"
+            name="invoiceNo"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input autoComplete="off" />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item
+            label="PI Number"
+            name="piNo"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input autoComplete="off" />
+          </Form.Item>
+        </Col>{" "}
+        <Col span={8}>
+          <Form.Item
+            label="Reference Number"
+            name="refNo"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input autoComplete="off" />
+          </Form.Item>
+        </Col>{" "}
+      </Row>{" "}
+      <Row gutter={32}>
+        <Col span={8}>
+          <Form.Item
+            label="Frieght Cost"
+            name="frieghtCost"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <InputNumber
+              className={styles.dateLable}
+              autoComplete="off"
+              formatter={(value) =>
+                `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item
+            label="Insuarance Cost"
+            name="insuaranceCost"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <InputNumber
+              className={styles.dateLable}
+              autoComplete="off"
+              formatter={(value) =>
+                `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+            />
+          </Form.Item>
+        </Col>{" "}
+        <Col span={8}>
+          <Form.Item
+            label="Total Cost"
+            name="totalCost"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <InputNumber
+              autoComplete="off"
+              className={styles.dateLable}
+              formatter={(value) =>
+                `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+            />
+          </Form.Item>
+        </Col>{" "}
+      </Row>{" "}
     </Form>
   );
 });

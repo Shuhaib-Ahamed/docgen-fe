@@ -38,14 +38,11 @@ const OrderDetailsForm = ({ setCurrentStep, onClose }) => {
     } catch (error) {
       console.log("ERROR");
     } finally {
+      if (!isEmpty(shipping) && !isEmpty(finance) && !isEmpty(container)) {
+        setCurrentStep(3);
+      }
     }
   }
-
-  useEffect(() => {
-    if (!isEmpty(shipping) && !isEmpty(finance) && !isEmpty(container)) {
-      setCurrentStep(3);
-    }
-  }, [shipping, finance, container]);
 
   return (
     <div className={styles.shippingContainer}>

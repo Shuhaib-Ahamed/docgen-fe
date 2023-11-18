@@ -92,7 +92,7 @@ const ExporterForm = ({ setCurrentStep, onClose }) => {
           </Col>
         </Row>{" "}
         <Row gutter={32}>
-          <Col span={4}>
+          <Col span={6}>
             <Form.Item
               label="Address Number"
               name="addressNo"
@@ -105,7 +105,7 @@ const ExporterForm = ({ setCurrentStep, onClose }) => {
               <Input autoComplete="off" />
             </Form.Item>
           </Col>
-          <Col span={14}>
+          <Col span={12}>
             <Form.Item
               label="Street Address"
               name="address"

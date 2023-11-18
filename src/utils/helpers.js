@@ -149,4 +149,23 @@ export function bindValue(obj, parentElement) {
   });
 }
 
+export const getFormattedDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+
+  return `${day}-${month}-${year}`;
+};
+
+export const convertDate = (inputDateString) => {
+  const inputDate = new Date(inputDateString);
+
+  const day = String(inputDate.getDate()).padStart(2, "0");
+  const month = String(inputDate.getMonth() + 1).padStart(2, "0");
+  const year = inputDate.getFullYear();
+
+  return `${day}-${month}-${year}`;
+};
+
 export default getPageQuery;
