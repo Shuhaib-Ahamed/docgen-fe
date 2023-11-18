@@ -24,10 +24,26 @@ const FinancialDetails = forwardRef((props, ref) => {
     []
   );
 
-  // useEffect(() => {
-  //   if (!isEmpty(finance)) {
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!isEmpty(finance)) {
+      form.setFieldsValue({
+        name: finance?.name,
+        specification: finance?.specification,
+        quantity: finance?.quantity,
+        usdMT: finance?.usdMT,
+        total: finance?.total,
+        description: finance?.description,
+        edn: finance?.edn,
+        rfp: finance?.rfp,
+        invoiceNo: finance?.invoiceNo,
+        piNo: finance?.piNo,
+        refNo: finance?.refNo,
+        frieghtCost: finance?.frieghtCost,
+        insuaranceCost: finance?.insuaranceCost,
+        totalCost: finance?.totalCost,
+      });
+    }
+  }, []);
 
   const onFinish = (values) => {
     try {

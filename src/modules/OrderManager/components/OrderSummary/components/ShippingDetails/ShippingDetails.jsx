@@ -58,14 +58,32 @@ const ShippingDetails = forwardRef((props, ref) => {
   useEffect(() => {
     if (!isEmpty(shipping)) {
       form?.setFieldsValue({
-        portLoadCountry: portLoadCountry,
-        portDischargeCountry: portDischargeCountry,
+        shippingCompany: shipping?.shippingCompany,
+        shippingContactName: shipping?.shippingContactName,
+        shippingContactNo: shipping?.shippingContactNo,
+        vesselName: shipping?.vesselName,
+        voyageNo: shipping?.voyageNo,
+        portLoadName: shipping?.portLoadName,
+        portDischarge: shipping?.portDischarge,
+        bookingRef: shipping?.bookingRef,
+        salesContractNumber: shipping?.bookingRef,
+        portLoadCountry: shipping?.portLoadCountry,
+        portDischargeCountry: shipping?.portDischargeCountry,
       });
+
+      isEmpty(shipping?.departureDate)
+        ? setDepartureDate(undefined)
+        : setDepartureDate(shipping?.departureDate);
+
+      setDischargeCountry(shipping?.portDischargeCountry);
+      setLoadCountry(shipping?.portLoadCountry);
     } else {
       form?.setFieldsValue({
         portLoadCountry: portLoadCountry,
         portDischargeCountry: portDischargeCountry,
       });
+      setDischargeCountry(portLoadCountry);
+      setLoadCountry(portDischargeCountry);
     }
   }, []);
 

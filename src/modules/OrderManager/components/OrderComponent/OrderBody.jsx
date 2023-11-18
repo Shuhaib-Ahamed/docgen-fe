@@ -10,7 +10,6 @@ import styles from "./order.module.less";
 const Step = Steps.Step;
 
 const OrderBody = ({ onClose, setCurrent, current }) => {
-
   const setCurrentStep = (stepNumber) => {
     setCurrent(stepNumber);
   };
@@ -28,14 +27,13 @@ const OrderBody = ({ onClose, setCurrent, current }) => {
         current === 3 ? styles.viewContainer : ""
       }`}
     >
-      <Steps current={current}>
+      <Steps current={current} responsive>
         <Step title="Exporter Details"></Step>
         <Step title="Importer Details"></Step>
         <Step title="Order Summary"></Step>
         <Step title="Review and Upload"></Step>
       </Steps>
 
-      
       {(() => {
         switch (current) {
           case 0:

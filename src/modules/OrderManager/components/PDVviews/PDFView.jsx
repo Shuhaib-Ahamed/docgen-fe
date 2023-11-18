@@ -1,4 +1,4 @@
-import { Button, Col, Collapse, Divider, Row } from "antd";
+import { BackTop, Button, Col, Collapse, Divider, Row } from "antd";
 import React, { useRef } from "react";
 import { useSelector } from "react-redux";
 import { getOrder } from "@/redux/order/selectors";
@@ -80,7 +80,7 @@ const PDFView = ({ setCurrentStep, onClose }) => {
   };
 
   const handleBack = () => {
-    setCurrentStep(3);
+    setCurrentStep(2);
   };
 
   const getComercialHeader = () => (
@@ -95,6 +95,14 @@ const PDFView = ({ setCurrentStep, onClose }) => {
 
   return (
     <div className={styles.viewContainer}>
+      <BackTop
+        visible={true}
+        onClick={() => {
+          document
+            ?.getElementsByClassName("ant-drawer-body")[0]
+            ?.scrollTo(0, 0);
+        }}
+      />
       <div className={styles.subContainer}>
         <h2 className={styles.heading}>Review & Upload</h2>
         <Collapse defaultActiveKey={["1", "2", "3"]}>

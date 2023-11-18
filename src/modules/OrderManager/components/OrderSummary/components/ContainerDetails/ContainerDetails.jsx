@@ -47,11 +47,21 @@ const ContainerDetails = forwardRef((props, ref) => {
     }
   };
 
-  // useEffect(() => {
-  //   if (!isEmpty(container)) {
-  //     //Set values
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!isEmpty(container)) {
+      form.setFieldsValue({
+        releaseNumber: container?.releaseNumber,
+        releaseTo: container?.releaseTo,
+        fclSize: container?.fclSize,
+        fclNo: container?.fclNo,
+        releaseFrom: container?.releaseFrom,
+      });
+
+      isEmpty(container?.releaseDate)
+        ? setReleaseDate(undefined)
+        : setReleaseDate(container?.releaseDate);
+    }
+  }, []);
 
   return (
     <Form

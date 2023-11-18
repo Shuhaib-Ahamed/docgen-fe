@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 
 import ShippingDetails from "@/modules/OrderManager/components/OrderSummary/components/ShippingDetails/ShippingDetails";
-import { Button, Col, Divider, Row } from "antd";
+import { BackTop, Button, Col, Divider, Row } from "antd";
 import ContainerDetails from "../ContainerDetails/ContainerDetails";
 import FinancialDetails from "../FinacialDetails/FinancialDetails";
 import { getOrder } from "@/redux/order/selectors";
@@ -40,12 +40,21 @@ const OrderDetailsForm = ({ setCurrentStep, onClose }) => {
     } finally {
       if (!isEmpty(shipping) && !isEmpty(finance) && !isEmpty(container)) {
         setCurrentStep(3);
+        document?.getElementsByClassName("ant-drawer-body")[0]?.scrollTo(0, 0);
       }
     }
   }
 
   return (
     <div className={styles.shippingContainer}>
+      <BackTop
+        visible={true}
+        onClick={() => {
+          document
+            ?.getElementsByClassName("ant-drawer-body")[0]
+            ?.scrollTo(0, 0);
+        }}
+      />
       <FinancialDetails ref={orderDetailsFormRef} />
       <ShippingDetails ref={shippingDetailsFormRef} />
       <ContainerDetails ref={containerDetailsFormRef} />
