@@ -1,6 +1,6 @@
 export const expDetails = {
   companyName: "J.M. Grains PTY LTD",
-  adressNo: "Unit 11 - 43",
+  addressNo: "Unit 11 - 43",
   address: "Nicholson Street, Abbotsford, VIC 3067",
   country: "Australia",
   email: "info@imgrains.com",

@@ -37,14 +37,14 @@ const ImporterForm = ({ setCurrentStep, onClose }) => {
     if (!isEmpty(importer)) {
       form.setFieldsValue({
         companyName: importer.companyName,
-        addressNo: importer.adressNo,
+        addressNo: importer.addressNo,
         address: importer.address,
         country: importer.country,
       });
     } else {
       form.setFieldsValue({
         companyName: impDetails.companyName,
-        addressNo: impDetails.adressNo,
+        addressNo: impDetails.addressNo,
         address: impDetails.address,
         country: impDetails.country,
       });

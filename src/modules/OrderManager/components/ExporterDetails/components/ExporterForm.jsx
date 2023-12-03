@@ -36,7 +36,7 @@ const ExporterForm = ({ setCurrentStep, onClose }) => {
       form.setFieldsValue({
         companyName: exporter.companyName,
         attendee: exporter.attendee,
-        addressNo: exporter.adressNo,
+        addressNo: exporter.addressNo,
         address: exporter.address,
         email: exporter.email,
         country: exporter.country,
@@ -46,7 +46,7 @@ const ExporterForm = ({ setCurrentStep, onClose }) => {
       form.setFieldsValue({
         companyName: expDetails.companyName,
         attendee: expDetails.attendee,
-        addressNo: expDetails.adressNo,
+        addressNo: expDetails.addressNo,
         address: expDetails.address,
         email: expDetails.email,
         country: expDetails.country,

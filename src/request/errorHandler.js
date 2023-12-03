@@ -32,7 +32,7 @@ const errorHandler = (error, emptyResult = null) => {
 
     if (error.response.data.jwtExpired) {
       localStorage.clear();
-      history.push("/logout");
+      history.push("/login");
     }
     return response.data;
   } else {
