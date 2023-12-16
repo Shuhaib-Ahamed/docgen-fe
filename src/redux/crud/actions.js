@@ -27,7 +27,7 @@ export const crud = {
       payload: { ...data },
     });
   },
-  
+
   list:
     (entity, currentPage = 1) =>
     async (dispatch) => {

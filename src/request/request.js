@@ -53,6 +53,21 @@ const request = {
     }
   },
 
+  updateUser: async (entity, id, jsonData) => {
+    axiosInstance.defaults.headers = {
+      ...headersInstance,
+    };
+    try {
+      const response = await axiosInstance.put(
+        entity + "/updateUser/" + id,
+        jsonData
+      );
+      return successHandler(response);
+    } catch (error) {
+      return errorHandler(error);
+    }
+  },
+
   delete: async (entity, id, option = {}) => {
     axiosInstance.defaults.headers = {
       ...headersInstance,

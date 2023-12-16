@@ -30,6 +30,25 @@ export const login = (loginAdminData) => async (dispatch) => {
   }
 };
 
+export const updateUser = (id, data) => async (dispatch) => {
+  dispatch({
+    type: actionTypes.AUTH_UPDATE_LOADING,
+    payload: true,
+  });
+  const response = await authService.updateUser(id, data);
+  if (response.success === true) {
+    dispatch({
+      type: actionTypes.LOGIN_SUCCESS,
+      payload: response.result,
+    });
+  } else {
+    dispatch({
+      type: actionTypes.AUTH_UPDATE_LOADING,
+      payload: false,
+    });
+  }
+};
+
 export const logout = () => async (dispatch) => {
   authService.logout();
   dispatch({

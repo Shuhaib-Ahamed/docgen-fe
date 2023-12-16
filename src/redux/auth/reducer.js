@@ -4,6 +4,7 @@ const INITIAL_STATE = {
   current: {},
   loading: false,
   isLoggedIn: false,
+  userLoading: false,
 };
 
 const authReducer = (state = INITIAL_STATE, action) => {
@@ -13,6 +14,12 @@ const authReducer = (state = INITIAL_STATE, action) => {
         ...state,
         loading: true,
       };
+
+    case actionTypes.AUTH_UPDATE_LOADING:
+      return {
+        ...state,
+        userLoading: action.payload,
+      };
     case actionTypes.FAILED_REQUEST:
       return INITIAL_STATE;
 
@@ -21,6 +28,7 @@ const authReducer = (state = INITIAL_STATE, action) => {
         current: action.payload,
         loading: false,
         isLoggedIn: true,
+        userLoading: false,
       };
     case actionTypes.LOGOUT_SUCCESS:
       return INITIAL_STATE;

@@ -41,15 +41,8 @@ const ImporterForm = ({ setCurrentStep, onClose }) => {
         address: importer.address,
         country: importer.country,
       });
-    } else {
-      form.setFieldsValue({
-        companyName: impDetails.companyName,
-        addressNo: impDetails.addressNo,
-        address: impDetails.address,
-        country: impDetails.country,
-      });
     }
-  }, []);
+  }, [importer]);
 
   return (
     <Fragment>
@@ -77,7 +70,7 @@ const ImporterForm = ({ setCurrentStep, onClose }) => {
         <Row gutter={32}>
           <Col span={4}>
             <Form.Item
-              label="Address Number"
+              label="Address No"
               name="addressNo"
               rules={[
                 {

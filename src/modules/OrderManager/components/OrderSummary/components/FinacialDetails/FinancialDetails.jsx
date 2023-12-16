@@ -1,23 +1,32 @@
-import { Col, Divider, Form, Input, InputNumber, Modal, Row, Select } from "antd";
-import React, { forwardRef, useEffect, useImperativeHandle } from "react";
+import {
+  Col,
+  Divider,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Row,
+  Select,
+} from "antd";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import { isEmpty } from "lodash";
 import styles from "./financialDetails.module.less";
 import TextArea from "antd/lib/input/TextArea";
 import { useDispatch, useSelector } from "react-redux";
 import { addFinanceDetails } from "@/redux/order/actions";
 import { getOrder } from "@/redux/order/selectors";
+import CustomSelect from "@/components/CustomSelect/CustomSelect";
+import { SELECT_TYPE } from "@/modules/OrderManager/constants/common";
+import { selectAuth } from "@/redux/auth/selectors";
 
 const FinancialDetails = forwardRef((props, ref) => {
+  const { current: currentUser } = useSelector(selectAuth);
   const { isLoading, finance } = useSelector(getOrder);
-  const [openAddItemModal, setOpenAddItemModal] = useState(false);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -99,16 +108,10 @@ const FinancialDetails = forwardRef((props, ref) => {
                 },
               ]}
             >
-              <Select
-                mode="multiple"
+              <CustomSelect
                 placeholder="Name of the Good"
-                value={selectedItems}
-                onChange={setSelectedItems}
-                style={{ width: "100%" }}
-                options={filteredOptions.map((item) => ({
-                  value: item,
-                  label: item,
-                }))}
+                items={currentUser.goods ?? []}
+                renderType={SELECT_TYPE.GOOD}
               />
             </Form.Item>
           </Col>
@@ -122,7 +125,11 @@ const FinancialDetails = forwardRef((props, ref) => {
                 },
               ]}
             >
-              <Input autoComplete="off" />
+              <CustomSelect
+                placeholder="Name of the Good"
+                items={currentUser.specifications ?? []}
+                renderType={SELECT_TYPE.SPEC}
+              />
             </Form.Item>
           </Col>
         </Row>
@@ -331,37 +338,6 @@ const FinancialDetails = forwardRef((props, ref) => {
           </Col>{" "}
         </Row>{" "}
       </Form>
-      <Modal
-        title="Add New Export Item"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={onFinish}
-          disabled={isLoading}
-        >
-          <h1 className={styles.subHeading}>Order Details</h1>
-          <Divider className={styles.divider} />
-          <Row gutter={32}>
-            <Col span={12}>
-              <Form.Item
-                label="Name of the Good"
-                name="name"
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-              >
-                <Input autoComplete="off" />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </Modal>
     </>
   );
 });

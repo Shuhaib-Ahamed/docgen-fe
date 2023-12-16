@@ -94,7 +94,7 @@ const ExporterForm = ({ setCurrentStep, onClose }) => {
         <Row gutter={32}>
           <Col span={6}>
             <Form.Item
-              label="Address Number"
+              label="Address No"
               name="addressNo"
               rules={[
                 {
