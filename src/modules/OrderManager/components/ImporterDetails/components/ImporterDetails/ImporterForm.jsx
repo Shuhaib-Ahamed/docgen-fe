@@ -1,23 +1,58 @@
 import { Button, Col, Divider, Form, Input, Row, Select } from "antd";
-import React, { Fragment, useEffect } from "react";
-import { impDetails } from "@/modules/OrderManager/components/ImporterDetails/constants/constants";
-
-import styles from "./importerForm.module.less";
+import React, {
+  Fragment,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+} from "react";
 import { countries } from "@/utils/countries";
 import { useDispatch, useSelector } from "react-redux";
 import { updateOrderImporter } from "@/redux/order/actions";
 import { getOrder } from "@/redux/order/selectors";
 import { isEmpty } from "lodash";
+import { selectAuth } from "@/redux/auth/selectors";
+import { updateUser } from "@/redux/auth/actions";
+import styles from "./importerForm.module.less";
 
 const { Option } = Select;
 
-const ImporterForm = ({ setCurrentStep, onClose }) => {
+const ImporterForm = forwardRef(({ setCurrentStep, onClose }, ref) => {
+  const { importer } = useSelector(getOrder);
+  const { current: currentUser, userLoading } = useSelector(selectAuth);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const { cuurentId, isLoading, importer } = useSelector(getOrder);
+  const { isLoading } = useSelector(getOrder);
+
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        resetForm() {
+          form?.resetFields();
+        },
+      };
+    },
+    []
+  );
 
   const onFinish = (values) => {
+    if (userLoading) {
+      return;
+    }
+
     try {
+      if (
+        isEmpty(importer) &&
+        !currentUser.importers
+          ?.map((item) => item?.companyName)
+          ?.includes(importer?.companyName)
+      ) {
+        dispatch(
+          updateUser(currentUser?.id, {
+            importers: [...(currentUser?.importers || []), { ...values }],
+          })
+        );
+      }
       dispatch(updateOrderImporter({ ...values }));
     } catch (error) {
     } finally {
@@ -146,11 +181,17 @@ const ImporterForm = ({ setCurrentStep, onClose }) => {
               </Button>
             </Col>
           </Row>
-          <Button onClick={() => handleOnClose()}>Save as draft & close</Button>
+          <Button
+            loading={userLoading}
+            disabled={userLoading}
+            onClick={() => handleOnClose()}
+          >
+            Save as draft & close
+          </Button>
         </div>
       </Form>
     </Fragment>
   );
-};
+});
 
 export default ImporterForm;

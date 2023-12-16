@@ -15,6 +15,8 @@ export default function CustomSelect(props) {
     defaultValue,
     placeholder,
     style,
+    onClear,
+    onChange: onImporterChange,
   } = props;
 
   const dispatch = useDispatch();
@@ -36,6 +38,7 @@ export default function CustomSelect(props) {
       setVisible(true);
       return;
     }
+    onImporterChange && onImporterChange(value);
     setSelectedValue(value);
   };
 
@@ -56,13 +59,22 @@ export default function CustomSelect(props) {
               goods: newFiltered,
             })
           );
-        } else if (SELECT_TYPE.SPEC) {
+        } else if (renderType === SELECT_TYPE.SPEC) {
           const newFiltered = currentUser?.specifications?.filter(
             (item) => item !== visibleDelete
           );
           dispatch(
             updateUser(currentUser?.id, {
               specifications: newFiltered,
+            })
+          );
+        } else if (renderType === SELECT_TYPE.IMPORT) {
+          const newFiltered = currentUser?.importers?.filter(
+            (item) => item?.companyName !== visibleDelete
+          );
+          dispatch(
+            updateUser(currentUser?.id, {
+              importers: newFiltered,
             })
           );
         }
@@ -84,6 +96,7 @@ export default function CustomSelect(props) {
 
         if (renderType === SELECT_TYPE.GOOD) {
           if (currentUser.goods?.includes(name)) {
+            setSelectedValue(name);
             return;
           }
 
@@ -95,6 +108,7 @@ export default function CustomSelect(props) {
           );
         } else if (SELECT_TYPE.SPEC) {
           if (currentUser.specifications?.includes(name)) {
+            setSelectedValue(name);
             return;
           }
           const newSpecs = [...(currentUser.specifications ?? []), name];
@@ -110,6 +124,15 @@ export default function CustomSelect(props) {
       form.resetFields();
       setVisible(false);
     }
+  };
+
+  const showDelete = (item) => {
+    if (item?.companyName) {
+      return selectedValue !== item?.companyName;
+    } else if (item) {
+      selectedValue !== item;
+    }
+    return false;
   };
 
   return (
@@ -163,20 +186,26 @@ export default function CustomSelect(props) {
         allowClear
         onChange={onChange}
         showSearch
+        onClear={onClear}
         loading={userLoading}
       >
         {items?.map((item) => (
-          <Option key={item} value={item}>
+          <Option
+            key={item?.companyName ? item?.companyName : item}
+            value={item?.companyName ? item?.companyName : item}
+          >
             <Row justify="space-between">
-              <Col>{item}</Col>
-              {selectedValue !== item && (
+              <Col>{item?.companyName ? item.companyName : item}</Col>
+              {showDelete(item) && (
                 <Col>
                   <DeleteOutlined
                     style={{ color: red[5] }}
-                    onClick={() => setDeleteView(item)}
-                  >
-                    Delete
-                  </DeleteOutlined>
+                    onClick={() =>
+                      setDeleteView(
+                        item?.companyName ? item?.companyName : item
+                      )
+                    }
+                  />
                 </Col>
               )}
             </Row>
