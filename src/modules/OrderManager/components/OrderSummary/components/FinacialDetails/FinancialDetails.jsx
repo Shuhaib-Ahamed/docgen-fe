@@ -54,6 +54,10 @@ const FinancialDetails = forwardRef((props, ref) => {
     }
   };
 
+  const dispatchOnChange = (value) => {
+    if (!isEmpty(value)) dispatch(addFinanceDetails({ ...finance, ...value }));
+  };
+
   const handleTotalCount = () => {
     const qty = form.getFieldValue("quantity");
     const usdValue = form.getFieldValue("usdMT");
@@ -83,6 +87,8 @@ const FinancialDetails = forwardRef((props, ref) => {
         frieghtCost: finance?.frieghtCost,
         insuaranceCost: finance?.insuaranceCost,
         totalCost: finance?.totalCost,
+        fclSize: finance?.fclSize,
+        fclNo: finance?.fclNo,
       });
     }
   }, []);
@@ -94,6 +100,7 @@ const FinancialDetails = forwardRef((props, ref) => {
         layout="vertical"
         onFinish={onFinish}
         disabled={isLoading}
+        onValuesChange={dispatchOnChange}
       >
         <h1 className={styles.subHeading}>Order Details</h1>
         <Divider className={styles.divider} />
@@ -109,6 +116,7 @@ const FinancialDetails = forwardRef((props, ref) => {
               ]}
             >
               <CustomSelect
+                defaultValue={finance?.name}
                 placeholder="Name of the Good"
                 items={currentUser.goods ?? []}
                 renderType={SELECT_TYPE.GOOD}
@@ -126,12 +134,41 @@ const FinancialDetails = forwardRef((props, ref) => {
               ]}
             >
               <CustomSelect
+                defaultValue={finance?.specification}
                 placeholder="Name of the Good"
                 items={currentUser.specifications ?? []}
                 renderType={SELECT_TYPE.SPEC}
               />
             </Form.Item>
           </Col>
+        </Row>
+        <Row gutter={32}>
+          <Col span={12}>
+            <Form.Item
+              label="FCL Size"
+              name="fclSize"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input autoComplete="off" />
+            </Form.Item>
+          </Col>{" "}
+          <Col span={12}>
+            <Form.Item
+              label="Number of FCL"
+              name="fclNo"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input autoComplete="off" />
+            </Form.Item>
+          </Col>{" "}
         </Row>
         <Row gutter={32}>
           <Col span={8}>

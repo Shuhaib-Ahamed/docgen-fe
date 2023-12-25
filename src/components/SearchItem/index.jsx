@@ -11,7 +11,12 @@ import { Empty } from "antd";
 export default function SearchItem({ config }) {
   let { entity, searchConfig, onSelect } = config;
 
-  const { displayLabels, searchFields, outputValue = "_id" } = searchConfig;
+  const {
+    displayLabels = [],
+    secondaryDisplayLables = null,
+    searchFields,
+    outputValue = "_id",
+  } = searchConfig;
   const dispatch = useDispatch();
   const [value, setValue] = useState("");
   const [options, setOptions] = useState([]);
@@ -64,8 +69,19 @@ export default function SearchItem({ config }) {
     let optionResults = [];
 
     result.map((item) => {
-      const labels = displayLabels.map((x) => item[x]).join(" ");
-      optionResults.push({ label: labels, value: item[outputValue] });
+      let labels = displayLabels
+        .map((x, idx) =>
+          secondaryDisplayLables
+            ? item[x][secondaryDisplayLables[idx]]
+            : item[x]
+        )
+        .join(" ");
+
+
+      optionResults.push({
+        label: labels ?? "Document",
+        value: item[outputValue],
+      });
     });
 
     setOptions(optionResults);

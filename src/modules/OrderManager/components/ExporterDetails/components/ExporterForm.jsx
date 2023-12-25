@@ -2,32 +2,40 @@ import { Button, Col, Divider, Form, Input, Row, Select } from "antd";
 import React, { Fragment, useEffect, useState } from "react";
 import { expDetails } from "../constants/constants";
 import { countries } from "@/utils/countries";
-import { createOrder, updateExporter } from "@/redux/order/actions";
-const { Option } = Select;
-import styles from "./exporterForm.module.less";
 import { useDispatch, useSelector } from "react-redux";
 import { getOrder } from "@/redux/order/selectors";
 import { isEmpty } from "lodash";
+import { createOrder, updateOrder } from "@/redux/order/actions";
+const { Option } = Select;
+import styles from "./exporterForm.module.less";
 
 const ExporterForm = ({ setCurrentStep, onClose }) => {
-  const { cuurentId, isLoading, exporter } = useSelector(getOrder);
-  const [form] = Form.useForm();
+  const { _id, importer, exporter, container, shipping, finance, isLoading } =
+    useSelector(getOrder);
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    try {
-      if (cuurentId) {
-        dispatch(updateExporter(values));
-      } else {
-        dispatch(createOrder(values));
-      }
-    } catch (error) {
-    } finally {
-      setCurrentStep(1);
-    }
+    setCurrentStep(1);
   };
 
   const handleOnClose = () => {
+    if (isLoading) return;
+    const orderObject = {
+      _id: _id ?? null,
+      status: "DRAFT",
+      importer: importer,
+      exporter: exporter,
+      container: container,
+      shipping: shipping,
+      finance: finance,
+    };
+
+    if (orderObject._id) {
+      dispatch(updateOrder(orderObject));
+    } else {
+      dispatch(createOrder(orderObject));
+    }
     onClose();
   };
 

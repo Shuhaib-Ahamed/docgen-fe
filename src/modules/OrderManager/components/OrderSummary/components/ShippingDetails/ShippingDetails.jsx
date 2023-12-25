@@ -18,6 +18,7 @@ const { Option } = Select;
 const ShippingDetails = forwardRef((props, ref) => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
+  const [transCountry, setTransCountry] = useState("");
   const { isLoading, shipping } = useSelector(getOrder);
   const [portLoadCountry, setLoadCountry] = useState("Sri Lanka");
   const [portDischargeCountry, setDischargeCountry] = useState("Australia");
@@ -44,6 +45,7 @@ const ShippingDetails = forwardRef((props, ref) => {
       departureDate: departureDate,
       portLoadCountry: portLoadCountry,
       portDischargeCountry: portDischargeCountry,
+      transshipment: transCountry,
       ...values,
     };
 
@@ -53,6 +55,11 @@ const ShippingDetails = forwardRef((props, ref) => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const dispatchOnChange = (value) => {
+    if (!isEmpty(value))
+      dispatch(addShippmentDetails({ ...shipping, ...value }));
   };
 
   useEffect(() => {
@@ -69,6 +76,7 @@ const ShippingDetails = forwardRef((props, ref) => {
         salesContractNumber: shipping?.bookingRef,
         portLoadCountry: shipping?.portLoadCountry,
         portDischargeCountry: shipping?.portDischargeCountry,
+        transshipment: shipping?.transshipment,
       });
 
       isEmpty(shipping?.departureDate)
@@ -77,6 +85,7 @@ const ShippingDetails = forwardRef((props, ref) => {
 
       setDischargeCountry(shipping?.portDischargeCountry);
       setLoadCountry(shipping?.portLoadCountry);
+      setTransCountry(shipping?.transshipment);
     } else {
       form?.setFieldsValue({
         portLoadCountry: portLoadCountry,
@@ -93,6 +102,7 @@ const ShippingDetails = forwardRef((props, ref) => {
       layout="vertical"
       onFinish={onFinish}
       disabled={isLoading}
+      onValuesChange={dispatchOnChange}
     >
       <h1 className={styles.subHeading}>Shipping Details</h1>
       <Divider className={styles.divider} />{" "}
@@ -180,8 +190,40 @@ const ShippingDetails = forwardRef((props, ref) => {
           </Form.Item>
         </Col>
         <Col span={18}>
-          <Form.Item label="Transshipment" name="transshipment">
-            <Input autoComplete="off" />
+          <Form.Item
+            label="Transshipment"
+            name="transshipment"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Select
+              value={transCountry}
+              showSearch
+              allowClear
+              placeholder="Transshipment Port Country"
+              className={styles.dateLable}
+              onChange={(e) => {
+                setTransCountry(e);
+                form.setFieldValue("transshipment", e);
+                
+              }}
+            >
+              {countries?.map((item, index) => (
+                <Option
+                  key={index}
+                  label={item.name.common}
+                  value={item.name.common}
+                >
+                  <div className={styles.option}>
+                    <img className={styles.optionFlag} src={item.flags.svg} />
+                    {item?.name?.common}
+                  </div>
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
         </Col>
       </Row>
@@ -213,6 +255,7 @@ const ShippingDetails = forwardRef((props, ref) => {
               <Select
                 value={portLoadCountry}
                 showSearch
+                allowClear
                 placeholder="Loading Port Country"
                 className={styles.dateLable}
                 onChange={(e) => {
@@ -243,6 +286,7 @@ const ShippingDetails = forwardRef((props, ref) => {
             <Form.Item
               label="Discharging Port"
               name="portDischarge"
+              allowClear
               rules={[
                 {
                   required: true,

@@ -1,12 +1,14 @@
-import React, { useRef, useState } from "react";
-import { Form, Input, InputNumber, Space, Divider, Row, Col } from "antd";
-
-import { Layout, Breadcrumb, Statistic, Progress, Tag } from "antd";
-
-import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
-
+import React from "react";
+import { Divider, Row, Col } from "antd";
 import { DashboardLayout } from "@/layout";
 import RecentTable from "@/components/RecentTable";
+import { isUndefined } from "lodash";
+import { countries } from "@/utils/countries";
+import { Statistic, Progress, Tag } from "antd";
+
+import styles from "@/modules/OrderManager/orderManagement.module.less";
+
+import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
 
 const TopCard = ({ title, tagContent, tagColor, prefix }) => {
   return (
@@ -97,23 +99,42 @@ const PreviewState = ({ tag, color, value }) => {
   );
 };
 export default function Dashboard() {
-  const leadColumns = [
+  const orderColumns = [
     {
-      title: "Client",
-      dataIndex: "client",
+      title: "Importer Name",
+      dataIndex: "importer",
+      key: "importer",
+      sorter: (a, b) => a.importer?.companyName - b.importer?.companyName,
+      render: (_, data) => data?.importer?.companyName ?? "-",
     },
     {
-      title: "phone",
-      dataIndex: "phone",
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      render: (status) => {
-        let color = status === "pending" ? "volcano" : "green";
+      title: "Imported To",
+      dataIndex: "importer",
+      key: "importer",
+      render: (_, data) => {
+        console.log(data);
+        const findCountry = countries.find(
+          (item) => item.name.common === data.importer.country
+        );
 
-        return <Tag color={color}>{status.toUpperCase()}</Tag>;
+        if (isUndefined(findCountry)) {
+          return <>-</>;
+        }
+        return (
+          <div className={styles.optionTag}>
+            <img className={styles.optionFlag} src={findCountry?.flags?.svg} />
+            {findCountry?.name?.common}
+          </div>
+        );
       },
+    },
+    {
+      title: "Shipping Company Name",
+      dataIndex: "shipping",
+      key: "shipping",
+      sorter: (a, b) =>
+        a.shipping?.shippingCompany - b.shipping?.shippingCompany,
+      render: (_, data) => data?.shipping?.shippingCompany ?? "-",
     },
   ];
 
@@ -222,7 +243,7 @@ export default function Dashboard() {
               </h3>
             </div>
 
-            <RecentTable entity={"lead"} dataTableColumns={leadColumns} />
+            <RecentTable entity={"order"} dataTableColumns={orderColumns} />
           </div>
         </Col>
 

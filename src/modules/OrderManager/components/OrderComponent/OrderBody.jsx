@@ -19,8 +19,6 @@ const OrderBody = ({ onClose, setCurrent, current }) => {
     onClose();
   };
 
-  console.log(current);
-
   return (
     <div
       className={`${styles.stepperContainer} ${

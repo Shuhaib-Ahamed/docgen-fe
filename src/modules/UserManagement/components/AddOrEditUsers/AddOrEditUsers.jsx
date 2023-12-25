@@ -4,15 +4,12 @@ import { ADD_USER, EDIT_USER, ROLE } from "../../constants/userConstants";
 import { useDispatch, useSelector } from "react-redux";
 import { crud } from "@/redux/crud/actions";
 import Loading from "@/components/Loading";
-import {
-  selectCreatedItem,
-  selectListItems,
-  selectUpdatedItem,
-} from "@/redux/crud/selectors";
-import styles from "./addOrEdit.module.less";
+import { selectCreatedItem, selectUpdatedItem } from "@/redux/crud/selectors";
+import { selectAuth } from "@/redux/auth/selectors";
 
 const AddOrEditUsers = (props) => {
   const [form] = Form.useForm();
+  const { current: currentUser } = useSelector(selectAuth);
   const { isLoading: isCreateLoading, isSuccess: isCreateSuccess } =
     useSelector(selectCreatedItem);
   const { isLoading: isUpdateLoading, isSuccess: isUpdateSuccess } =
@@ -36,7 +33,14 @@ const AddOrEditUsers = (props) => {
           "password",
           "role",
         ]);
-        dispatch(crud.create(entity, formFields));
+        dispatch(
+          crud.create(entity, {
+            ...formFields,
+            goods: currentUser.goods ?? [],
+            specifications: currentUser.specifications ?? [],
+            importers: currentUser.importers ?? [],
+          })
+        );
       } else if (type === EDIT_USER && data?._id) {
         const formFields = form.getFieldsValue(["role", "email", "name"]);
         const { _id, __v, removed, isLoggedIn, enabled, createdAt, ...prev } =

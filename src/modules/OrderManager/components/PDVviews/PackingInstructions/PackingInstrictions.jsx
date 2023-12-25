@@ -46,16 +46,18 @@ const PackingInstrictions = ({ importer, finance, shipping, container }) => {
             className={styles.borderNotTop}
           >
             <Col span={12}>
-              <Row>
-                <Col span={14}>
-                  <h4 className={styles.label}>Sales Contract number :</h4>
-                </Col>
-                <Col span={10}>
-                  <p contentEditable className={styles.text}>
-                    {shipping?.salesContractNumber}
-                  </p>
-                </Col>
-              </Row>
+              {shipping?.salesContractNumber && (
+                <Row>
+                  <Col span={14}>
+                    <h4 className={styles.label}>Sales Contract number :</h4>
+                  </Col>
+                  <Col span={10}>
+                    <p contentEditable className={styles.text}>
+                      {shipping?.salesContractNumber}
+                    </p>
+                  </Col>
+                </Row>
+              )}
             </Col>
             <Col span={12}>
               <Row>
@@ -68,96 +70,125 @@ const PackingInstrictions = ({ importer, finance, shipping, container }) => {
               </Row>
             </Col>
           </Row>
-          <Row
-            justify={"space-between"}
-            gutter={12}
-            className={styles.borderNotTop}
-          >
-            <Col span={12}>
-              <Row>
-                <Col span={14}>
-                  <h4 className={styles.label}>REFERENCE : </h4>
-                </Col>
-                <Col span={10}>
-                  <p contentEditable className={styles.text}>
-                    {finance?.refNo}
-                  </p>
-                </Col>
-              </Row>
-            </Col>
-            <Col span={12}>
-              <Row>
+          {(shipping?.bookingRef || finance?.refNo) && (
+            <Row
+              justify={"space-between"}
+              gutter={12}
+              className={styles.borderNotTop}
+            >
+              <Col span={12}>
+                {finance?.refNo && (
+                  <Row>
+                    <Col span={14}>
+                      <h4 className={styles.label}>REFERENCE : </h4>
+                    </Col>
+                    <Col span={10}>
+                      <p contentEditable className={styles.text}>
+                        {finance?.refNo}
+                      </p>
+                    </Col>
+                  </Row>
+                )}
+              </Col>
+              <Col span={12}>
+                {shipping?.bookingRef && (
+                  <Row>
+                    <Col span={12}>
+                      <h4 className={styles.label}>ORDER NUMBER : </h4>
+                    </Col>
+                    <Col span={12}>
+                      <p contentEditable className={styles.text}>
+                        {shipping?.bookingRef}
+                      </p>
+                    </Col>
+                  </Row>
+                )}
+              </Col>
+            </Row>
+          )}{" "}
+          {(finance?.rfp || finance?.edn) && (
+            <Row
+              justify={"space-between"}
+              gutter={12}
+              className={styles.borderNotTop}
+            >
+              {finance?.rfp && (
                 <Col span={12}>
-                  <h4 className={styles.label}>ORDER NUMBER : </h4>
+                  <Row>
+                    <Col span={14}>
+                      <h4 className={styles.label}>RFP : </h4>
+                    </Col>
+                    <Col span={10}>
+                      <p contentEditable className={styles.text}>
+                        {finance?.rfp}
+                      </p>
+                    </Col>
+                  </Row>
                 </Col>
+              )}
+              {finance?.edn && (
                 <Col span={12}>
-                  <p contentEditable className={styles.text}>
-                    {shipping?.bookingRef}
-                  </p>
+                  <Row>
+                    <Col span={12}>
+                      <h4 className={styles.label}>EDN: </h4>
+                    </Col>
+                    <Col span={12}>
+                      <p contentEditable className={styles.text}>
+                        {finance?.edn}
+                      </p>
+                    </Col>
+                  </Row>
                 </Col>
-              </Row>
-            </Col>
-          </Row>{" "}
-          <Row
-            justify={"space-between"}
-            gutter={12}
-            className={styles.borderNotTop}
-          >
-            <Col span={12}>
-              <Row>
-                <Col span={14}>
-                  <h4 className={styles.label}>RFP : </h4>
-                </Col>
-                <Col span={10}>
-                  <p contentEditable className={styles.text}>
-                    {finance?.rfp}
-                  </p>
-                </Col>
-              </Row>
-            </Col>
-            <Col span={12}>
-              <Row>
-                <Col span={12}>
-                  <h4 className={styles.label}>EDN: </h4>
-                </Col>
-                <Col span={12}>
-                  <p contentEditable className={styles.text}>
-                    {finance?.edn}
-                  </p>
-                </Col>
-              </Row>
-            </Col>
-          </Row>{" "}
+              )}
+            </Row>
+          )}
           <div className={styles.marginDivide}></div>
           <Row justify={"center"} gutter={12} className={styles.border}>
             <h4 className={styles.label}>Shipping Details</h4>
           </Row>
-          <Row gutter={12} className={styles.borderNotTop}>
-            <Col span={4}>
-              <h4 className={styles.label}>BOOKING REF : </h4>
-            </Col>
-            <Col span={4}>
-              <p contentEditable className={styles.text}>
-                {shipping?.bookingRef}
-              </p>
-            </Col>
-            <Col>
-              <h4 className={styles.label}>CONTACT NAME : </h4>
-            </Col>
-            <Col span={4}>
-              <p contentEditable className={styles.text}>
-                {shipping?.shippingContactName}
-              </p>
-            </Col>
-            <Col>
-              <h4 className={styles.label}>PHONE : </h4>
-            </Col>
-            <Col>
-              <p contentEditable className={styles.text}>
-                {shipping?.shippingContactNo}
-              </p>
-            </Col>
-          </Row>
+          {(shipping?.shippingContactNo ||
+            shipping?.bookingRef ||
+            shipping?.shippingContactName) && (
+            <Row gutter={12} className={styles.borderNotTop}>
+              {shipping?.bookingRef && (
+                <>
+                  <Col span={4}>
+                    <h4 className={styles.label}>BOOKING REF : </h4>
+                  </Col>
+                  <Col span={4}>
+                    <p contentEditable className={styles.text}>
+                      {shipping?.bookingRef}
+                    </p>
+                  </Col>
+                </>
+              )}
+
+              {shipping?.shippingContactName && (
+                <>
+                  <Col>
+                    <h4 className={styles.label}>CONTACT NAME : </h4>
+                  </Col>
+                  <Col span={4}>
+                    <p contentEditable className={styles.text}>
+                      {shipping?.shippingContactName}
+                    </p>
+                  </Col>
+                </>
+              )}
+              {shipping?.shippingContactNo && (
+                <>
+                  <Col>
+                    <h4 className={styles.label}>PHONE : </h4>
+                  </Col>
+                  <Col>
+                    <p contentEditable className={styles.text}>
+                      {shipping?.shippingContactNo}
+                    </p>
+                  </Col>
+                </>
+              )}
+            </Row>
+          )}
           <Row
             justify={"space-between"}
             gutter={12}
@@ -166,7 +197,13 @@ const PackingInstrictions = ({ importer, finance, shipping, container }) => {
             <Col span={12}>
               <Row>
                 <Col span={14}>
-                  <h4 className={styles.label}>CARRIER :</h4>
+                  <h4
+                    className={`${styles.label} ${
+                      shipping?.shippingCompany ?? styles.warningText
+                    }`}
+                  >
+                    CARRIER :
+                  </h4>
                 </Col>
                 <Col span={10}>
                   <p contentEditable className={styles.text}>
@@ -178,7 +215,13 @@ const PackingInstrictions = ({ importer, finance, shipping, container }) => {
             <Col span={12}>
               <Row>
                 <Col span={12}>
-                  <h4 className={styles.label}>CUT OFF : </h4>
+                  <h4
+                    className={`${styles.label} ${
+                      container?.releaseDate ?? styles.warningText
+                    }`}
+                  >
+                    CUT OFF :{" "}
+                  </h4>
                 </Col>
                 <Col span={12}>
                   <p contentEditable className={styles.text}>
@@ -196,7 +239,14 @@ const PackingInstrictions = ({ importer, finance, shipping, container }) => {
             <Col span={12}>
               <Row>
                 <Col span={12}>
-                  <h4 className={styles.label}>VESSEL : </h4>
+                  <h4
+                    className={`${styles.label} ${
+                      (shipping?.vesselName || shipping?.voyageNo) ??
+                      styles.warningText
+                    }`}
+                  >
+                    VESSEL :{" "}
+                  </h4>
                 </Col>
                 <Col span={12}>
                   <p contentEditable className={styles.text}>
@@ -208,7 +258,13 @@ const PackingInstrictions = ({ importer, finance, shipping, container }) => {
             <Col span={12}>
               <Row>
                 <Col span={12}>
-                  <h4 className={styles.label}>DEPARTURE DATE : </h4>
+                  <h4
+                    className={`${styles.label} ${
+                      shipping?.departureDate ?? styles.warningText
+                    }`}
+                  >
+                    DEPARTURE DATE :{" "}
+                  </h4>
                 </Col>
                 <Col span={12}>
                   <p contentEditable className={styles.text}>
@@ -226,7 +282,14 @@ const PackingInstrictions = ({ importer, finance, shipping, container }) => {
             <Col span={12}>
               <Row>
                 <Col span={12}>
-                  <h4 className={styles.label}>PORT OF LOADING : </h4>
+                  <h4
+                    className={`${styles.label} ${
+                      (shipping?.portLoadName || shipping?.portLoadCountry) ??
+                      styles.warningText
+                    }`}
+                  >
+                    PORT OF LOADING :{" "}
+                  </h4>
                 </Col>
                 <Col span={12}>
                   <p contentEditable className={styles.text}>
@@ -256,7 +319,15 @@ const PackingInstrictions = ({ importer, finance, shipping, container }) => {
             <Col span={12}>
               <Row>
                 <Col span={12}>
-                  <h4 className={styles.label}>FINAL DESTINATION : </h4>
+                  <h4
+                    className={`${styles.label} ${
+                      (shipping?.portDischarge ||
+                        shipping?.portDischargeCountry) ??
+                      styles.warningText
+                    }`}
+                  >
+                    FINAL DESTINATION :{" "}
+                  </h4>
                 </Col>
                 <Col span={12}>
                   <p contentEditable className={styles.text}>
@@ -265,25 +336,66 @@ const PackingInstrictions = ({ importer, finance, shipping, container }) => {
                 </Col>
               </Row>
             </Col>
-            <Col span={12}>
-              <Row>
+            {(finance?.fclSize || finance?.fclNo) && (
+              <>
                 <Col span={12}>
-                  <h4 className={styles.label}>
-                    CONTAINERS({container?.fclSize}'FCL) :{" "}
-                  </h4>
+                  <Row>
+                    <Col span={12}>
+                      <h4 className={styles.label}>
+                        CONTAINERS({finance?.fclSize}'FCL) :{" "}
+                      </h4>
+                    </Col>
+                    <Col span={12}>
+                      <p contentEditable className={styles.text}>
+                        {finance?.fclNo}
+                      </p>
+                    </Col>
+                  </Row>
                 </Col>
-                <Col span={12}>
-                  <p contentEditable className={styles.text}>
-                    {container?.fclNo}
-                  </p>
-                </Col>
-              </Row>
-            </Col>
+              </>
+            )}
           </Row>{" "}
           <div className={styles.marginDivide}></div>
           <Row justify={"center"} gutter={12} className={styles.border}>
             <h4 className={styles.label}>CONTAINERS</h4>
           </Row>{" "}
+          {(container?.releaseDate || container?.releaseNumber) && (
+            <Row
+              justify={"space-between"}
+              gutter={12}
+              className={styles.borderNotTop}
+            >
+              {container?.releaseDate && (
+                <Col span={12}>
+                  <Row>
+                    <Col span={14}>
+                      <h4 className={styles.label}>EMPTY RELEASE DATE</h4>
+                    </Col>
+                    <Col span={10}>
+                      <p className={styles.text}>
+                        {" "}
+                        {convertDate(container?.releaseDate)}
+                      </p>
+                    </Col>
+                  </Row>
+                </Col>
+              )}
+              {container?.releaseNumber && (
+                <Col span={12}>
+                  <Row>
+                    <Col span={12}>
+                      <h4 className={styles.label}>RELEASE NUMBER</h4>
+                    </Col>
+                    <Col span={12}>
+                      <p contentEditable className={styles.text}>
+                        {container?.releaseNumber}
+                      </p>
+                    </Col>
+                  </Row>
+                </Col>
+              )}
+            </Row>
+          )}
           <Row
             justify={"space-between"}
             gutter={12}
@@ -292,38 +404,13 @@ const PackingInstrictions = ({ importer, finance, shipping, container }) => {
             <Col span={12}>
               <Row>
                 <Col span={14}>
-                  <h4 className={styles.label}>EMPTY RELEASE DATE</h4>
-                </Col>
-                <Col span={10}>
-                  <p className={styles.text}>
-                    {" "}
-                    {convertDate(container?.releaseDate)}
-                  </p>
-                </Col>
-              </Row>
-            </Col>
-            <Col span={12}>
-              <Row>
-                <Col span={12}>
-                  <h4 className={styles.label}>RELEASE NUMBER</h4>
-                </Col>
-                <Col span={12}>
-                  <p contentEditable className={styles.text}>
-                    {container?.releaseNumber}
-                  </p>
-                </Col>
-              </Row>
-            </Col>
-          </Row>{" "}
-          <Row
-            justify={"space-between"}
-            gutter={12}
-            className={styles.borderNotTop}
-          >
-            <Col span={12}>
-              <Row>
-                <Col span={14}>
-                  <h4 className={styles.label}>FROM</h4>
+                  <h4
+                    className={`${styles.label} ${
+                      container?.releaseFrom ?? styles.warningText
+                    }`}
+                  >
+                    FROM
+                  </h4>
                 </Col>
                 <Col span={10}>
                   <p contentEditable className={styles.text}>
@@ -335,7 +422,13 @@ const PackingInstrictions = ({ importer, finance, shipping, container }) => {
             <Col span={12}>
               <Row>
                 <Col span={12}>
-                  <h4 className={styles.label}>RETURN TO</h4>
+                  <h4
+                    className={`${styles.label} ${
+                      container?.releaseTo ?? styles.warningText
+                    }`}
+                  >
+                    RETURN TO
+                  </h4>
                 </Col>
                 <Col span={12}>
                   <p contentEditable className={styles.text}>
@@ -348,13 +441,31 @@ const PackingInstrictions = ({ importer, finance, shipping, container }) => {
           <div className={styles.marginDivide}></div>
           <Row justify={"space-between"} gutter={12} className={styles.border}>
             <Col span={6}>
-              <h4 className={styles.label}>Specification/Grade</h4>
+              <h4
+                className={`${styles.label} ${
+                  finance?.specification ?? styles.warningText
+                }`}
+              >
+                Specification/Grade
+              </h4>
             </Col>
             <Col span={6}>
-              <h4 className={styles.label}>Description of Goods</h4>
+              <h4
+                className={`${styles.label} ${
+                  finance?.description ?? styles.warningText
+                }`}
+              >
+                Description of Goods
+              </h4>
             </Col>{" "}
             <Col span={12}>
-              <h4 className={styles.label}>Surveyor</h4>
+              <h4
+                className={`${styles.label} ${
+                  finance?.specification ?? styles.warningText
+                }`}
+              >
+                Surveyor
+              </h4>
             </Col>
           </Row>{" "}
           <Row
@@ -377,7 +488,13 @@ const PackingInstrictions = ({ importer, finance, shipping, container }) => {
                   <p contentEditable className={styles.text}>
                     {finance?.description}
                   </p>
-                  <p className={styles.label}>Total : {finance?.quantity} MT</p>
+                  <p
+                    className={`${styles.label} ${
+                      finance?.quantity ?? styles.warningText
+                    }`}
+                  >
+                    Total : {finance?.quantity} MT
+                  </p>
                 </Col>
               </Row>
             </Col>{" "}

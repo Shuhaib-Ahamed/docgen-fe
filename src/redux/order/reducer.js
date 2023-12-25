@@ -1,7 +1,8 @@
 import * as actionTypes from "./types";
 
 const INITIAL_STATE = {
-  currentId: null,
+  _id: undefined,
+  status: "DRAFT",
   exporter: {
     companyName: "J.M. Grains PTY LTD",
     attendee: "Manjula Lanerolle",
@@ -15,28 +16,45 @@ const INITIAL_STATE = {
   finance: {},
   shipping: {},
   container: {},
-
   isLoading: false,
+  orderList: [],
 };
 
 const orderReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case actionTypes.CREATE_ORDER:
+    case actionTypes.SET_ORDERS_LIST:
       return {
         ...state,
-        exporter: action.payload.exporter,
-        currentId: action.payload.id,
+        orderList: action.payload,
       };
-
     case actionTypes.UPDATE_ORDER_IMPORTER:
       return {
         ...state,
         importer: action.payload,
       };
-    case actionTypes.UPDATE_ORDER:
+
+    case actionTypes.UPDATE_CURRENT_ORDER:
       return {
         ...state,
-        order: action.payload,
+        status: action.payload.status ?? "DRAFT",
+        _id: action.payload._id ?? null,
+        container: action.payload.container ?? {},
+        finance: action.payload.finance ?? {},
+        shipping: action.payload.shipping ?? {},
+        importer: action.payload.importer ?? {},
+        exporter: action.payload.exporter ?? {},
+      };
+
+    case actionTypes.RESET_CURRENT_ORDER:
+      return {
+        ...state,
+        status: null,
+        _id: undefined,
+        container: {},
+        finance: {},
+        shipping: {},
+        importer: {},
+        exporter: {},
       };
 
     case actionTypes.ADD_CONTAINER:
@@ -62,7 +80,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
     case actionTypes.SET_LOADING:
       return {
         ...state,
-        isLoading: false,
+        isLoading: true,
       };
     case actionTypes.CLEAR_STATE:
       return INITIAL_STATE;

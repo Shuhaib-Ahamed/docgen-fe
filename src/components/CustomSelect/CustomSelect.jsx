@@ -127,10 +127,8 @@ export default function CustomSelect(props) {
   };
 
   const showDelete = (item) => {
-    if (item?.companyName) {
-      return selectedValue !== item?.companyName;
-    } else if (item) {
-      selectedValue !== item;
+    if (item) {
+      return !!(selectedValue !== item);
     }
     return false;
   };
@@ -196,7 +194,7 @@ export default function CustomSelect(props) {
           >
             <Row justify="space-between">
               <Col>{item?.companyName ? item.companyName : item}</Col>
-              {showDelete(item) && (
+              {showDelete(item?.companyName ? item.companyName : item) && (
                 <Col>
                   <DeleteOutlined
                     style={{ color: red[5] }}

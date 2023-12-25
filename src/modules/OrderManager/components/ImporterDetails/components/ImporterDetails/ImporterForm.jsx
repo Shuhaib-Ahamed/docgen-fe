@@ -7,7 +7,11 @@ import React, {
 } from "react";
 import { countries } from "@/utils/countries";
 import { useDispatch, useSelector } from "react-redux";
-import { updateOrderImporter } from "@/redux/order/actions";
+import {
+  createOrder,
+  updateOrder,
+  updateOrderImporter,
+} from "@/redux/order/actions";
 import { getOrder } from "@/redux/order/selectors";
 import { isEmpty } from "lodash";
 import { selectAuth } from "@/redux/auth/selectors";
@@ -17,11 +21,11 @@ import styles from "./importerForm.module.less";
 const { Option } = Select;
 
 const ImporterForm = forwardRef(({ setCurrentStep, onClose }, ref) => {
-  const { importer } = useSelector(getOrder);
+  const { _id, importer, exporter, container, shipping, finance, isLoading } =
+    useSelector(getOrder);
   const { current: currentUser, userLoading } = useSelector(selectAuth);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const { isLoading } = useSelector(getOrder);
 
   useImperativeHandle(
     ref,
@@ -61,6 +65,22 @@ const ImporterForm = forwardRef(({ setCurrentStep, onClose }, ref) => {
   };
 
   const handleOnClose = () => {
+    if (isLoading) return;
+    const orderObject = {
+      _id: _id ?? null,
+      status: "DRAFT",
+      importer: importer,
+      exporter: exporter,
+      container: container,
+      shipping: shipping,
+      finance: finance,
+    };
+
+    if (orderObject._id) {
+      dispatch(updateOrder(orderObject));
+    } else {
+      dispatch(createOrder(orderObject));
+    }
     onClose();
   };
 

@@ -47,13 +47,16 @@ const ContainerDetails = forwardRef((props, ref) => {
     }
   };
 
+  const dispatchOnChange = (value) => {
+    if (!isEmpty(value))
+      dispatch(addContainerDetails({ ...container, ...value }));
+  };
+
   useEffect(() => {
     if (!isEmpty(container)) {
       form.setFieldsValue({
         releaseNumber: container?.releaseNumber,
         releaseTo: container?.releaseTo,
-        fclSize: container?.fclSize,
-        fclNo: container?.fclNo,
         releaseFrom: container?.releaseFrom,
       });
 
@@ -69,6 +72,7 @@ const ContainerDetails = forwardRef((props, ref) => {
       layout="vertical"
       onFinish={onFinish}
       disabled={isLoading}
+      onValuesChange={dispatchOnChange}
     >
       <h1 className={styles.subHeading}>Container Details</h1>
       <Divider className={styles.divider} />{" "}
@@ -119,34 +123,6 @@ const ContainerDetails = forwardRef((props, ref) => {
             <Input autoComplete="off" />
           </Form.Item>
         </Col>
-      </Row>
-      <Row gutter={32}>
-        <Col span={12}>
-          <Form.Item
-            label="FCL Size"
-            name="fclSize"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input autoComplete="off" />
-          </Form.Item>
-        </Col>{" "}
-        <Col span={12}>
-          <Form.Item
-            label="Number of FCL"
-            name="fclNo"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input autoComplete="off" />
-          </Form.Item>
-        </Col>{" "}
       </Row>
     </Form>
   );

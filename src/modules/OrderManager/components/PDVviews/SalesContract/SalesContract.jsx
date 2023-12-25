@@ -7,7 +7,7 @@ import Footer from "../components/Footer/Footer";
 import styles from "./sales.module.less";
 import { convertDate, getFormattedDate } from "@/utils/helpers";
 
-const SalesContract = ({ importer, finance, shipping, container }) => {
+const SalesContract = ({ importer, finance, shipping }) => {
   return (
     <div className={styles.pdfContainer}>
       <Header />
@@ -33,13 +33,16 @@ const SalesContract = ({ importer, finance, shipping, container }) => {
                 <Col span={24}>
                   <h4 className={styles.label}>BUYER</h4>
                   <p contentEditable className={styles.text}>
-                    {importer?.companyName}
+                    {importer?.companyName},
                   </p>
                   <p contentEditable className={styles.text}>
-                    {importer?.addressNo}
+                    {importer?.addressNo},
                   </p>
                   <p contentEditable className={styles.text}>
-                    {importer?.address}, {importer?.country}
+                    {importer?.address},
+                  </p>
+                  <p contentEditable className={styles.text}>
+                    {importer?.country}
                   </p>
                 </Col>
               </Row>
@@ -51,16 +54,18 @@ const SalesContract = ({ importer, finance, shipping, container }) => {
             className={styles.borderNotTop}
           >
             <Col span={12}>
-              <Row>
-                <Col span={12}>
-                  <h4 className={styles.label}>CONTRACT NO : </h4>
-                </Col>
-                <Col span={12}>
-                  <p contentEditable className={styles.text}>
-                    {shipping?.salesContractNumber}
-                  </p>
-                </Col>
-              </Row>
+              {shipping?.salesContractNumber && (
+                <Row>
+                  <Col span={12}>
+                    <h4 className={styles.label}>CONTRACT NO : </h4>
+                  </Col>
+                  <Col span={12}>
+                    <p contentEditable className={styles.text}>
+                      {shipping?.salesContractNumber}
+                    </p>
+                  </Col>
+                </Row>
+              )}
             </Col>
             <Col span={12}>
               <Row>
@@ -72,11 +77,17 @@ const SalesContract = ({ importer, finance, shipping, container }) => {
                 </Col>
               </Row>
             </Col>
-          </Row>{" "}
+          </Row>
           <div className={styles.marginDivide}></div>
           <Row justify={"space-between"} gutter={12} className={styles.border}>
             <Col span={12}>
-              <h4 className={styles.label}>COMMODITY</h4>
+              <h4
+                className={`${styles.label} ${
+                  finance?.name ?? styles.warningText
+                }`}
+              >
+                COMMODITY
+              </h4>
             </Col>
             <Col span={12}>
               <p contentEditable className={styles.text}>
@@ -90,12 +101,18 @@ const SalesContract = ({ importer, finance, shipping, container }) => {
             className={styles.borderNotTop}
           >
             <Col span={12}>
-              <h4 className={styles.label}>QUANTITY</h4>
+              <h4
+                className={`${styles.label} ${
+                  (finance?.fclNo || finance?.fclSize) ?? styles.warningText
+                }`}
+              >
+                QUANTITY
+              </h4>
             </Col>
             <Col span={12}>
               <p contentEditable className={styles.text}>
-                {container?.fclNo} x {container?.fclSize}ft FCL (Approx.{" "}
-                {container?.fclSize} MT each FCL)
+                {finance?.fclNo} x {finance?.fclSize}ft FCL (Approx.{" "}
+                {finance?.fclSize} MT each FCL)
               </p>
             </Col>
           </Row>{" "}
@@ -119,7 +136,13 @@ const SalesContract = ({ importer, finance, shipping, container }) => {
             className={styles.borderNotTop}
           >
             <Col span={12}>
-              <h4 className={styles.label}>SHIPMENT</h4>
+              <h4
+                className={`${styles.label} ${
+                  shipping?.departureDate ?? styles.warningText
+                }`}
+              >
+                SHIPMENT
+              </h4>
             </Col>
             <Col span={12}>
               <p className={styles.text}>
@@ -133,7 +156,13 @@ const SalesContract = ({ importer, finance, shipping, container }) => {
             className={styles.borderNotTop}
           >
             <Col span={12}>
-              <h4 className={styles.label}>PRICE</h4>
+              <h4
+                className={`${styles.label} ${
+                  finance?.usdMT ?? styles.warningText
+                }`}
+              >
+                PRICE
+              </h4>
             </Col>
             <Col span={12}>
               <p contentEditable className={styles.text}>
@@ -147,7 +176,14 @@ const SalesContract = ({ importer, finance, shipping, container }) => {
             className={styles.borderNotTop}
           >
             <Col span={12}>
-              <h4 className={styles.label}>LOADING PORT</h4>
+              <h4
+                className={`${styles.label} ${
+                  (shipping?.portLoadName || shipping?.portLoadCountry) ??
+                  styles.warningText
+                }`}
+              >
+                LOADING PORT
+              </h4>
             </Col>
             <Col span={12}>
               <p contentEditable className={styles.text}>
@@ -161,7 +197,14 @@ const SalesContract = ({ importer, finance, shipping, container }) => {
             className={styles.borderNotTop}
           >
             <Col span={12}>
-              <h4 className={styles.label}>DISCHARGE PORT</h4>
+              <h4
+                className={`${styles.label} ${
+                  (shipping?.portDischarge || shipping?.portDischargeCountr) ??
+                  styles.warningText
+                }`}
+              >
+                DISCHARGE PORT
+              </h4>
             </Col>
             <Col span={12}>
               <p contentEditable className={styles.text}>

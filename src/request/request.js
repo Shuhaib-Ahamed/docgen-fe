@@ -3,6 +3,7 @@ import { API_BASE_URL, ACCESS_TOKEN_NAME } from "@/config/serverApiConfig";
 import { token as tokenCookies } from "@/auth";
 import errorHandler from "./errorHandler";
 import successHandler from "./successHandler";
+import { isEmpty } from "lodash";
 
 const headersInstance = { [ACCESS_TOKEN_NAME]: tokenCookies.get() };
 
@@ -102,7 +103,7 @@ const request = {
     };
     try {
       let query = "";
-      if (option !== {}) {
+      if (!isEmpty(option)) {
         let fields = option.fields ? "fields=" + option.fields : "";
         let question = option.question ? "&q=" + option.question : "";
         query = `?${fields}${question}`;
@@ -125,7 +126,7 @@ const request = {
 
     try {
       let query = "";
-      if (option !== {}) {
+      if (!isEmpty(option)) {
         let page = option.page ? "page=" + option.page : "";
         let items = option.items ? "&items=" + option.items : "";
         query = `?${page}${items}`;

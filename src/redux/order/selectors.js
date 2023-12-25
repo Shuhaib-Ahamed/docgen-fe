@@ -22,6 +22,11 @@ export const getContainer = createSelector(
   (order) => order.container
 );
 
+export const getOrderList = createSelector(
+  [orderSelect],
+  (order) => order.orderList
+);
+
 export const getCurrentID = createSelector(
   [orderSelect],
   (order) => order.currentId

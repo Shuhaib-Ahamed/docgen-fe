@@ -3,10 +3,9 @@ import { Modal } from "antd";
 
 import { useDispatch, useSelector } from "react-redux";
 import { crud } from "@/redux/crud/actions";
-import { useCrudContext } from "@/context/crud";
 import { selectDeletedItem } from "@/redux/crud/selectors";
-import { valueByString } from "@/utils/helpers";
 import Loading from "../Loading";
+import { fetchOrders } from "@/redux/order/actions";
 
 export default function DeleteModal(props) {
   let {
@@ -17,16 +16,24 @@ export default function DeleteModal(props) {
     displayItem,
     handleCancel,
     id,
+    isOrder,
   } = props;
 
   const dispatch = useDispatch();
   const { isLoading, isSuccess } = useSelector(selectDeletedItem);
 
   useEffect(() => {
-    if (isSuccess) {
-      dispatch(crud.list(entity));
-      dispatch(crud.resetAction(entity));
-      handleCancel();
+    if (isOrder) {
+      if (isSuccess) {
+        dispatch(fetchOrders(1));
+        handleCancel();
+      }
+    } else {
+      if (isSuccess) {
+        dispatch(crud.list(entity));
+        dispatch(crud.resetAction(entity));
+        handleCancel();
+      }
     }
   }, [isSuccess]);
 

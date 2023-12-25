@@ -49,18 +49,21 @@ const Invoice = ({ importer, finance, shipping, container }) => {
             gutter={12}
             className={styles.borderNotTop}
           >
-            <Col span={12}>
-              <Row>
-                <Col span={12}>
-                  <h4 className={styles.label}>INVOICE NO : </h4>
-                </Col>
-                <Col span={12}>
-                  <p contentEditable className={styles.text}>
-                    {finance?.invoiceNo}
-                  </p>
-                </Col>
-              </Row>
-            </Col>
+            {finance?.invoiceNo && (
+              <Col span={12}>
+                <Row>
+                  <Col span={12}>
+                    <h4 className={styles.label}>INVOICE NO : </h4>
+                  </Col>
+                  <Col span={12}>
+                    <p contentEditable className={styles.text}>
+                      {finance?.invoiceNo}
+                    </p>
+                  </Col>
+                </Row>
+              </Col>
+            )}
+
             <Col span={12}>
               <Row>
                 <Col span={12}>
@@ -72,42 +75,54 @@ const Invoice = ({ importer, finance, shipping, container }) => {
               </Row>
             </Col>
           </Row>{" "}
-          <Row
-            justify={"space-between"}
-            gutter={12}
-            className={styles.borderNotTop}
-          >
-            <Col span={12}>
-              <Row>
+          {(finance?.piNo || finance?.refNo) && (
+            <Row
+              justify={"space-between"}
+              gutter={12}
+              className={styles.borderNotTop}
+            >
+              {finance?.refNo && (
                 <Col span={12}>
-                  <h4 className={styles.label}>REFERENCE : </h4>
+                  <Row>
+                    <Col span={12}>
+                      <h4 className={styles.label}>REFERENCE : </h4>
+                    </Col>
+                    <Col span={12}>
+                      <p contentEditable className={styles.text}>
+                        {finance?.refNo}
+                      </p>
+                    </Col>
+                  </Row>
                 </Col>
+              )}
+              {finance?.piNo && (
                 <Col span={12}>
-                  <p contentEditable className={styles.text}>
-                    {finance?.refNo}
-                  </p>
+                  <Row>
+                    <Col span={12}>
+                      <h4 className={styles.label}>PI NUMBER : </h4>
+                    </Col>
+                    <Col span={12}>
+                      <p contentEditable className={styles.text}>
+                        {finance?.piNo}
+                      </p>
+                    </Col>
+                  </Row>
                 </Col>
-              </Row>
-            </Col>
-            <Col span={12}>
-              <Row>
-                <Col span={12}>
-                  <h4 className={styles.label}>PI NUMBER : </h4>
-                </Col>
-                <Col span={12}>
-                  <p contentEditable className={styles.text}>
-                    {finance?.piNo}
-                  </p>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
+              )}
+            </Row>
+          )}
           <div className={styles.marginDivide}></div>
           <Row justify={"space-between"} gutter={12} className={styles.border}>
             <Col span={12}>
               <Row>
                 <Col span={12}>
-                  <h4 className={styles.label}>VESSEL : </h4>
+                  <h4
+                    className={`${styles.label} ${
+                      shipping?.vesselName ?? styles.warningText
+                    }`}
+                  >
+                    VESSEL :{" "}
+                  </h4>
                 </Col>
                 <Col span={12}>
                   <p contentEditable className={styles.text}>
@@ -119,7 +134,13 @@ const Invoice = ({ importer, finance, shipping, container }) => {
             <Col span={12}>
               <Row>
                 <Col span={12}>
-                  <h4 className={styles.label}>DEPARTURE DATE : </h4>
+                  <h4
+                    className={`${styles.label} ${
+                      shipping?.departureDate ?? styles.warningText
+                    }`}
+                  >
+                    DEPARTURE DATE :{" "}
+                  </h4>
                 </Col>
                 <Col span={12}>
                   <p className={styles.text}>
@@ -137,7 +158,14 @@ const Invoice = ({ importer, finance, shipping, container }) => {
             <Col span={12}>
               <Row>
                 <Col span={12}>
-                  <h4 className={styles.label}>PORT OF LOADING : </h4>
+                  <h4
+                    className={`${styles.label} ${
+                      (shipping?.portLoadName || shipping?.portLoadCountry) ??
+                      styles.warningText
+                    }`}
+                  >
+                    PORT OF LOADING :{" "}
+                  </h4>
                 </Col>
                 <Col span={12}>
                   <p contentEditable className={styles.text}>
@@ -151,7 +179,15 @@ const Invoice = ({ importer, finance, shipping, container }) => {
             <Col span={12}>
               <Row>
                 <Col span={12}>
-                  <h4 className={styles.label}>PORT OF DISCHARGE : </h4>
+                  <h4
+                    className={`${styles.label} ${
+                      (shipping?.portDischarge ||
+                        shipping?.portDischargeCountry) ??
+                      styles.warningText
+                    }`}
+                  >
+                    PORT OF DISCHARGE :{" "}
+                  </h4>
                 </Col>
                 <Col span={12}>
                   <p contentEditable className={styles.text}>
@@ -172,14 +208,19 @@ const Invoice = ({ importer, finance, shipping, container }) => {
             <Col span={12}>
               <Row>
                 <Col span={12}>
-                  <h4 className={styles.label}>FINAL DESTINATION : </h4>
+                  <h4
+                    className={`${styles.label} ${
+                      (shipping?.portDischarge ||
+                        shipping?.portDischargeCountry) ??
+                      styles.warningText
+                    }`}
+                  >
+                    FINAL DESTINATION :{" "}
+                  </h4>
                 </Col>
                 <Col span={12}>
                   <p contentEditable className={styles.text}>
-                    {" "}
-                    {shipping?.portDischarge}
-                    {","}
-                    {shipping?.portDischargeCountry}
+                    {shipping?.portDischarge},{shipping?.portDischargeCountry}
                   </p>
                 </Col>
               </Row>
@@ -187,13 +228,17 @@ const Invoice = ({ importer, finance, shipping, container }) => {
             <Col span={12}>
               <Row>
                 <Col span={12}>
-                  <h4 className={styles.label}>
-                    CONTAINERS({container?.fclSize}'FCL) :{" "}
+                  <h4
+                    className={`${styles.label} ${
+                      (finance?.fclSize || finance?.fclNo) ?? styles.warningText
+                    }`}
+                  >
+                    CONTAINERS({finance?.fclSize}'FCL) :{" "}
                   </h4>
                 </Col>
                 <Col span={12}>
                   <p contentEditable className={styles.text}>
-                    {container?.fclNo}
+                    {finance?.fclNo}
                   </p>
                 </Col>
               </Row>
@@ -213,13 +258,31 @@ const Invoice = ({ importer, finance, shipping, container }) => {
             <Col span={12}>
               <Row>
                 <Col span={8}>
-                  <h4 className={styles.label}>MTS</h4>
+                  <h4
+                    className={`${styles.label} ${
+                      finance?.quantity ?? styles.warningText
+                    }`}
+                  >
+                    MTS
+                  </h4>
                 </Col>
                 <Col span={8}>
-                  <h4 className={styles.label}>USD PER MT</h4>
+                  <h4
+                    className={`${styles.label} ${
+                      finance?.usdMT ?? styles.warningText
+                    }`}
+                  >
+                    USD PER MT
+                  </h4>
                 </Col>
                 <Col span={8}>
-                  <h4 className={styles.label}>AMOUNT ($)</h4>
+                  <h4
+                    className={`${styles.label} ${
+                      finance?.total ?? styles.warningText
+                    }`}
+                  >
+                    AMOUNT ($)
+                  </h4>
                 </Col>
               </Row>
             </Col>
@@ -266,89 +329,103 @@ const Invoice = ({ importer, finance, shipping, container }) => {
             <Col span={12}>
               <Row>
                 <Col span={24}>
-                  <p className={styles.text}>
-                    <p contentEditable className={styles.text}>
-                      {finance?.description}
-                    </p>
+                  <p contentEditable className={styles.text}>
+                    {finance?.description}
                   </p>
                 </Col>
               </Row>{" "}
             </Col>
           </Row>{" "}
-          <Row
-            justify="space-between"
-            gutter={12}
-            className={styles.borderNotTop}
-          >
-            <Col span={12}>
-              <Row>
-                <Col span={8}>
-                  <h4 className={styles.label}>FREIGHT</h4>
-                </Col>
-                <Col span={8}>
-                  <h4 className={styles.label}>INSURANCE</h4>
-                </Col>
-                <Col span={8}>
-                  <h4 className={styles.label}>COST</h4>
-                </Col>
-              </Row>
-            </Col>
-            <Col span={12}></Col>
-          </Row>
-          <Row
-            justify="space-between"
-            gutter={12}
-            className={styles.borderNotTop}
-          >
-            <Col span={12}>
-              <Row>
-                <Col span={8}>
-                  <p contentEditable className={styles.text}>
-                    USD {finance?.frieghtCost}
-                  </p>
-                </Col>
-                <Col span={8}>
-                  <p contentEditable className={styles.text}>
-                    USD {finance?.insuaranceCost}
-                  </p>
-                </Col>
-                <Col span={8}>
-                  <p contentEditable className={styles.text}>
-                    USD {finance?.totalCost}
-                  </p>
-                </Col>
-              </Row>
-            </Col>
-            <Col span={12}></Col>
-          </Row>
-          <Row
-            justify="space-between"
-            gutter={12}
-            className={styles.borderNotTop}
-          >
-            <Col span={12}>
-              <h4 className={styles.label}>TOTAL GOODS</h4>
-            </Col>
-            <Col span={12}>
-              <Row>
-                <Col span={8}>
-                  <h4 contentEditable className={styles.label}>
-                    {finance?.quantity}
-                  </h4>
-                </Col>
-                <Col span={8}>
-                  <h4 contentEditable className={styles.label}>
-                    {finance?.usdMT}
-                  </h4>
-                </Col>
-                <Col span={8}>
-                  <h4 contentEditable className={styles.label}>
-                    {finance?.total}
-                  </h4>
-                </Col>
-              </Row>
-            </Col>
-          </Row>{" "}
+          {(finance?.frieghtCost ||
+            finance?.insuaranceCost ||
+            finance?.totalCost) && (
+            <Row
+              justify="space-between"
+              gutter={12}
+              className={styles.borderNotTop}
+            >
+              <Col span={12}>
+                <Row>
+                  <Col span={8}>
+                    <h4 className={styles.label}>FREIGHT</h4>
+                  </Col>
+                  <Col span={8}>
+                    <h4 className={styles.label}>INSURANCE</h4>
+                  </Col>
+                  <Col span={8}>
+                    <h4 className={styles.label}>COST</h4>
+                  </Col>
+                </Row>
+              </Col>
+              <Col span={12}></Col>
+            </Row>
+          )}
+          {(finance?.frieghtCost ||
+            finance?.insuaranceCost ||
+            finance?.totalCost) && (
+            <Row
+              justify="space-between"
+              gutter={12}
+              className={styles.borderNotTop}
+            >
+              <Col span={12}>
+                <Row>
+                  {finance?.frieghtCost && (
+                    <Col span={8}>
+                      <p contentEditable className={styles.text}>
+                        USD {finance?.frieghtCost}
+                      </p>
+                    </Col>
+                  )}
+                  {finance?.insuaranceCost && (
+                    <Col span={8}>
+                      <p contentEditable className={styles.text}>
+                        USD {finance?.insuaranceCost}
+                      </p>
+                    </Col>
+                  )}
+                  {finance?.totalCost && (
+                    <Col span={8}>
+                      <p contentEditable className={styles.text}>
+                        USD {finance?.totalCost}
+                      </p>
+                    </Col>
+                  )}
+                </Row>
+              </Col>
+              <Col span={12}></Col>
+            </Row>
+          )}
+          {(finance?.quantity || finance?.usdMT || finance?.total) && (
+            <Row
+              justify="space-between"
+              gutter={12}
+              className={styles.borderNotTop}
+            >
+              <Col span={12}>
+                <h4 className={styles.label}>TOTAL GOODS</h4>
+              </Col>
+              <Col span={12}>
+                <Row>
+                  <Col span={8}>
+                    <h4 contentEditable className={styles.label}>
+                      {finance?.quantity}
+                    </h4>
+                  </Col>
+                  <Col span={8}>
+                    <h4 contentEditable className={styles.label}>
+                      {finance?.usdMT}
+                    </h4>
+                  </Col>
+                  <Col span={8}>
+                    <h4 contentEditable className={styles.label}>
+                      {finance?.total}
+                    </h4>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          )}
           <Row
             justify="space-between"
             gutter={12}

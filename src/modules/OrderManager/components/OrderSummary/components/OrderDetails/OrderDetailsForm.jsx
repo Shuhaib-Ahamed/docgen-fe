@@ -1,22 +1,54 @@
-import React, { useEffect, useLayoutEffect, useRef } from "react";
-
+import React, { useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ShippingDetails from "@/modules/OrderManager/components/OrderSummary/components/ShippingDetails/ShippingDetails";
 import { BackTop, Button, Col, Divider, Row } from "antd";
 import ContainerDetails from "../ContainerDetails/ContainerDetails";
 import FinancialDetails from "../FinacialDetails/FinancialDetails";
-import { getOrder } from "@/redux/order/selectors";
-import { useSelector } from "react-redux";
 import { isEmpty } from "lodash";
 
 import styles from "./orderDetailsForm.module.less";
+import { getOrder } from "@/redux/order/selectors";
+import { createOrder, updateOrder } from "@/redux/order/actions";
 
-const OrderDetailsForm = ({ setCurrentStep, onClose }) => {
-  const { isLoading, shipping, finance, container } = useSelector(getOrder);
+const OrderDetailsForm = ({
+  setCurrentStep,
+  onClose,
+  isLoading,
+  shipping,
+  finance,
+  container,
+}) => {
+  const {
+    _id,
+    importer: orderImporter,
+    exporter: orderExporter,
+    container: orderContainer,
+    shipping: orderShipping,
+    finance: orderFinance,
+    isLoading: isOrderLoading,
+  } = useSelector(getOrder);
+  const dispatch = useDispatch();
   const shippingDetailsFormRef = useRef(null);
   const containerDetailsFormRef = useRef(null);
   const orderDetailsFormRef = useRef(null);
 
   const handleOnClose = () => {
+    if (isOrderLoading) return;
+    const orderObject = {
+      _id: _id ?? null,
+      status: "DRAFT",
+      importer: orderImporter,
+      exporter: orderExporter,
+      container: orderContainer,
+      shipping: orderShipping,
+      finance: orderFinance,
+    };
+
+    if (orderObject._id) {
+      dispatch(updateOrder(orderObject));
+    } else {
+      dispatch(createOrder(orderObject));
+    }
     onClose();
   };
 
@@ -24,7 +56,7 @@ const OrderDetailsForm = ({ setCurrentStep, onClose }) => {
     setCurrentStep(1);
   };
 
-  function handleSubmit() {
+  const handleSubmit = () => {
     try {
       const formRefs = [
         shippingDetailsFormRef,
@@ -43,7 +75,7 @@ const OrderDetailsForm = ({ setCurrentStep, onClose }) => {
         document?.getElementsByClassName("ant-drawer-body")[0]?.scrollTo(0, 0);
       }
     }
-  }
+  };
 
   return (
     <div className={styles.shippingContainer}>
