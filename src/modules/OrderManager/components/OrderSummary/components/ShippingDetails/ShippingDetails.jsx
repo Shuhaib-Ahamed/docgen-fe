@@ -1,4 +1,5 @@
-import { Col, DatePicker, Divider, Form, Input, Row, Select } from "antd";
+import { Col, Divider, Form, Input, Row, Select } from "antd";
+import DatePicker from "react-date-picker";
 import { countries } from "@/utils/countries";
 import React, {
   forwardRef,
@@ -36,7 +37,7 @@ const ShippingDetails = forwardRef((props, ref) => {
     []
   );
 
-  const onChange = (date) => {
+  const onDateChange = (date) => {
     setDepartureDate(date);
   };
 
@@ -77,12 +78,10 @@ const ShippingDetails = forwardRef((props, ref) => {
         portLoadCountry: shipping?.portLoadCountry,
         portDischargeCountry: shipping?.portDischargeCountry,
         transshipment: shipping?.transshipment,
+        departureDate: new Date(shipping?.departureDate),
       });
 
-      isEmpty(shipping?.departureDate)
-        ? setDepartureDate(undefined)
-        : setDepartureDate(shipping?.departureDate);
-
+      setDepartureDate(shipping?.departureDate);
       setDischargeCountry(shipping?.portDischargeCountry);
       setLoadCountry(shipping?.portLoadCountry);
       setTransCountry(shipping?.transshipment);
@@ -171,7 +170,11 @@ const ShippingDetails = forwardRef((props, ref) => {
               },
             ]}
           >
-            <DatePicker className={styles.dateLable} onChange={onChange} />
+            <DatePicker
+              className={styles.dateLable}
+              onChange={onDateChange}
+              value={departureDate}
+            />
           </Form.Item>
         </Col>
       </Row>
@@ -208,7 +211,6 @@ const ShippingDetails = forwardRef((props, ref) => {
               onChange={(e) => {
                 setTransCountry(e);
                 form.setFieldValue("transshipment", e);
-                
               }}
             >
               {countries?.map((item, index) => (

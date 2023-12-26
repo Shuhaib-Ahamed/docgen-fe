@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 
 import AuthRouter from "./AuthRouter";
 import AppRouter from "./AppRouter";
@@ -9,6 +9,8 @@ import Navigation from "@/layout/Navigation";
 
 import { useSelector } from "react-redux";
 import { selectAuth } from "@/redux/auth/selectors";
+
+
 
 export default function Router() {
   const { isLoggedIn } = useSelector(selectAuth);

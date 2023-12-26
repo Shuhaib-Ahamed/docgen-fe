@@ -7,7 +7,8 @@ import {
   DashboardOutlined,
   TeamOutlined,
   FileOutlined,
-  ThunderboltOutlined,
+  GlobalOutlined,
+  CompassOutlined,
 } from "@ant-design/icons";
 import { useLocation } from "react-router-dom/cjs/react-router-dom";
 import { selectCurrentAdmin } from "@/redux/auth/selectors";
@@ -40,11 +41,16 @@ function Navigation() {
       path: "/orders",
       icon: <FileOutlined />,
     },
-    // {
-    //   label: " Settings",
-    //   path: "/settings",
-    //   icon: <SettingOutlined />,
-    // },
+    {
+      label: "Importers",
+      path: "/importers",
+      icon: <CompassOutlined />,
+    },
+    {
+      label: "Shippers",
+      path: "/shippers",
+      icon: <GlobalOutlined />,
+    },
   ];
 
   const keysPrivate = [
@@ -64,11 +70,38 @@ function Navigation() {
       icon: <TeamOutlined />,
     },
     {
+      label: "Importers",
+      path: "/importers",
+      icon: <CompassOutlined />,
+    },
+    {
+      label: "Shippers",
+      path: "/shippers",
+      icon: <GlobalOutlined />,
+    },
+    {
       label: " Settings",
       path: "/settings",
       icon: <SettingOutlined />,
     },
   ];
+
+  const renderIndex = () => {
+    let indexArr = ["0"];
+    if (role === ROLE.USER) {
+      indexArr = [
+        keys.findIndex((key) => key.path === location.pathname).toString(),
+      ];
+    } else if (role === ROLE.ADMIN) {
+      indexArr = [
+        keysPrivate
+          .findIndex((key) => key.path === location.pathname)
+          .toString(),
+      ];
+    }
+
+    return indexArr;
+  };
 
   return (
     <Sider
@@ -91,15 +124,7 @@ function Navigation() {
         />
       </div>
 
-      <Menu
-        theme="dark"
-        selectedKeys={[
-          keys
-            .findIndex((key) => key.path === location.pathname)
-            .toString() || ["0"],
-        ]}
-        mode="inline"
-      >
+      <Menu theme="dark" selectedKeys={renderIndex()} mode="inline">
         {role === ROLE.USER &&
           keys.map((item, index) => (
             <Menu.Item key={index} icon={item.icon}>

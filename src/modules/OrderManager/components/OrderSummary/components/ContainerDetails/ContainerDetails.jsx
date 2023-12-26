@@ -1,10 +1,11 @@
-import { Col, DatePicker, Divider, Form, Input, Row } from "antd";
+import { Col, Divider, Form, Input, Row } from "antd";
 import React, {
   forwardRef,
   useEffect,
   useImperativeHandle,
   useState,
 } from "react";
+import DatePicker from "react-date-picker";
 import { getOrder } from "@/redux/order/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import { isEmpty } from "lodash";
@@ -29,7 +30,7 @@ const ContainerDetails = forwardRef((props, ref) => {
     []
   );
 
-  const onChange = (date) => {
+  const onDateChange = (date) => {
     setReleaseDate(date);
   };
 
@@ -58,11 +59,10 @@ const ContainerDetails = forwardRef((props, ref) => {
         releaseNumber: container?.releaseNumber,
         releaseTo: container?.releaseTo,
         releaseFrom: container?.releaseFrom,
+        releaseDate: container?.releaseDate,
       });
 
-      isEmpty(container?.releaseDate)
-        ? setReleaseDate(undefined)
-        : setReleaseDate(container?.releaseDate);
+      setReleaseDate(container?.releaseDate);
     }
   }, []);
 
@@ -92,7 +92,11 @@ const ContainerDetails = forwardRef((props, ref) => {
         </Col>{" "}
         <Col span={12}>
           <Form.Item label="Container Release Date" name="releaseDate">
-            <DatePicker className={styles.dateLable} onChange={onChange} />
+            <DatePicker
+              value={releaseDate}
+              className={styles.dateLable}
+              onChange={onDateChange}
+            />
           </Form.Item>
         </Col>
       </Row>

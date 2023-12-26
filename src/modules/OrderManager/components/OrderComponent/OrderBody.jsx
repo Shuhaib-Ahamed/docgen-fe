@@ -3,6 +3,8 @@ import { Steps } from "antd";
 import Exporter from "@/modules/OrderManager/components/ExporterDetails/Exporter";
 import Importer from "@/modules/OrderManager/components/ImporterDetails/Importer";
 import OrderSummary from "@/modules/OrderManager/components/OrderSummary/OrderSummary";
+import { getOrder } from "@/redux/order/selectors";
+import { useSelector } from "react-redux";
 import PDFView from "../PDVviews/PDFView";
 
 import styles from "./order.module.less";
@@ -10,6 +12,7 @@ import styles from "./order.module.less";
 const Step = Steps.Step;
 
 const OrderBody = ({ onClose, setCurrent, current }) => {
+  const { status } = useSelector(getOrder);
   const setCurrentStep = (stepNumber) => {
     setCurrent(stepNumber);
   };
@@ -19,6 +22,12 @@ const OrderBody = ({ onClose, setCurrent, current }) => {
     onClose();
   };
 
+  const handleStepClick = (key) => {
+    if (status === "PUBLISHED") {
+      setCurrent(key);
+    }
+  };
+
   return (
     <div
       className={`${styles.stepperContainer} ${
@@ -26,10 +35,26 @@ const OrderBody = ({ onClose, setCurrent, current }) => {
       }`}
     >
       <Steps current={current} responsive>
-        <Step title="Exporter Details"></Step>
-        <Step title="Importer Details"></Step>
-        <Step title="Order Summary"></Step>
-        <Step title="Review and Upload"></Step>
+        <Step
+          title="Exporter Details"
+          onClick={() => handleStepClick(0)}
+          className={status === "PUBLISHED" && styles.steps}
+        ></Step>
+        <Step
+          title="Importer Details"
+          onClick={() => handleStepClick(1)}
+          className={status === "PUBLISHED" && styles.steps}
+        ></Step>
+        <Step
+          title="Order Summary"
+          onClick={() => handleStepClick(2)}
+          className={status === "PUBLISHED" && styles.steps}
+        ></Step>
+        <Step
+          title="Review and Upload"
+          onClick={() => handleStepClick(3)}
+          className={status === "PUBLISHED" && styles.steps}
+        ></Step>
       </Steps>
 
       {(() => {

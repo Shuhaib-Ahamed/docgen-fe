@@ -239,7 +239,7 @@ export default function Dashboard() {
           <div className="whiteBox">
             <div className="pad20">
               <h3 style={{ color: "#22075e", marginBottom: 5 }}>
-                Recent Leads
+                Recent Orders
               </h3>
             </div>
 

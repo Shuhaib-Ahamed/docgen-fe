@@ -68,18 +68,7 @@ const PDFView = ({ setCurrentStep, onClose }) => {
     onClose();
   };
 
-  const downloadDocuments = () => {
-    const refs = [invoiceRef, packingRef, salesRef];
-    const filenames = ["invoice.pdf", "packing.pdf", "sales.pdf"];
-
-    refs.forEach((ref, index) => {
-      const currentOptions =
-        ref === packingRef
-          ? optionsA3(filenames[index])
-          : options(filenames[index]);
-      generatePDF(ref, currentOptions);
-    });
-
+  const handlePublish = () => {
     if (isLoading) return;
     const orderObject = {
       _id: _id ?? null,
@@ -97,6 +86,21 @@ const PDFView = ({ setCurrentStep, onClose }) => {
       dispatch(createOrder(orderObject));
     }
     onClose();
+  };
+
+  const downloadDocuments = () => {
+    const refs = [invoiceRef, packingRef, salesRef];
+    const filenames = ["invoice.pdf", "packing.pdf", "sales.pdf"];
+
+    refs.forEach((ref, index) => {
+      const currentOptions =
+        ref === packingRef
+          ? optionsA3(filenames[index])
+          : options(filenames[index]);
+      generatePDF(ref, currentOptions);
+    });
+
+    handlePublish();
   };
 
   const handleBack = () => {
@@ -183,7 +187,16 @@ const PDFView = ({ setCurrentStep, onClose }) => {
                 Back
               </Button>
             </Col>
-            <Col span={20}>
+            <Col span={8}>
+              <Button
+                type="default"
+                className={styles.nextButton}
+                onClick={() => handlePublish()}
+              >
+                Save Documents
+              </Button>
+            </Col>
+            <Col span={12}>
               <Button
                 type="primary"
                 htmlType="submit"

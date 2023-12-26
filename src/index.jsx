@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 // import "./index.css";
 import App from "./app";
 import "./style/app.less";
+import "react-date-picker/dist/DatePicker.css";
+import "react-calendar/dist/Calendar.css";
 import * as serviceWorker from "./serviceWorker";
 
 console.log("process env", process.env.NODE_ENV);
