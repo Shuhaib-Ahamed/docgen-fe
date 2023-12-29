@@ -46,7 +46,9 @@ export default function AppRouter() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchUserData(current?.id ?? ""));
+    if (current?.id) {
+      dispatch(fetchUserData(current?.id));
+    }
   }, []);
 
   return (

@@ -11,17 +11,21 @@ export const login = (loginAdminData) => async (dispatch) => {
   const data = await authService.login(loginAdminData);
 
   if (data.success === true) {
-    const authValue = {
-      current: data.result.admin,
-      loading: false,
-      isLoggedIn: true,
-    };
-    storePersist.set("auth", authValue);
-    dispatch({
-      type: actionTypes.LOGIN_SUCCESS,
-      payload: data.result.admin,
-    });
-    history.push("/");
+    try {
+      const authValue = {
+        current: data.result.admin,
+        loading: false,
+        isLoggedIn: true,
+      };
+      storePersist.set("auth", authValue);
+      dispatch({
+        type: actionTypes.UPDATE_USER,
+        payload: data.result.admin,
+      });
+    } catch (error) {
+    } finally {
+      window.location.reload();
+    }
   } else {
     dispatch({
       type: actionTypes.FAILED_REQUEST,
