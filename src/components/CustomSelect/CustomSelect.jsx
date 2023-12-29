@@ -16,7 +16,7 @@ export default function CustomSelect(props) {
     placeholder,
     style,
     onClear,
-    onChange: onImporterChange,
+    onChange: onSelectChange,
   } = props;
 
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ export default function CustomSelect(props) {
       setVisible(true);
       return;
     }
-    onImporterChange && onImporterChange(value);
+    onSelectChange(value);
     setSelectedValue(value);
   };
 
@@ -66,15 +66,6 @@ export default function CustomSelect(props) {
           dispatch(
             updateUser(currentUser?.id, {
               specifications: newFiltered,
-            })
-          );
-        } else if (renderType === SELECT_TYPE.IMPORT) {
-          const newFiltered = currentUser?.importers?.filter(
-            (item) => item?.companyName !== visibleDelete
-          );
-          dispatch(
-            updateUser(currentUser?.id, {
-              importers: newFiltered,
             })
           );
         }
@@ -188,21 +179,14 @@ export default function CustomSelect(props) {
         loading={userLoading}
       >
         {items?.map((item) => (
-          <Option
-            key={item?.companyName ? item?.companyName : item}
-            value={item?.companyName ? item?.companyName : item}
-          >
+          <Option key={item} value={item}>
             <Row justify="space-between">
-              <Col>{item?.companyName ? item.companyName : item}</Col>
-              {showDelete(item?.companyName ? item.companyName : item) && (
+              <Col>{item}</Col>
+              {showDelete(item) && (
                 <Col>
                   <DeleteOutlined
                     style={{ color: red[5] }}
-                    onClick={() =>
-                      setDeleteView(
-                        item?.companyName ? item?.companyName : item
-                      )
-                    }
+                    onClick={() => setDeleteView(item)}
                   />
                 </Col>
               )}

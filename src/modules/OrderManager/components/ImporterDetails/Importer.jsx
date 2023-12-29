@@ -1,8 +1,6 @@
 import React, { useRef } from "react";
 import ImporterForm from "@/modules/OrderManager/components/ImporterDetails/components/ImporterDetails/ImporterForm";
-import { Divider, Form } from "antd";
-import CustomSelect from "@/components/CustomSelect/CustomSelect";
-import { SELECT_TYPE } from "../../constants/common";
+import { Col, Divider, Form, Row, Select } from "antd";
 import { selectAuth } from "@/redux/auth/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import { getOrder } from "@/redux/order/selectors";
@@ -13,13 +11,13 @@ import styles from "./importer.module.less";
 const Importer = ({ setCurrentStep, onClose }) => {
   const importerFormRef = useRef(null);
   const { importer } = useSelector(getOrder);
-  const { current: currentUser } = useSelector(selectAuth);
+  const { current: currentUser, userLoading } = useSelector(selectAuth);
   const [form] = Form.useForm();
   const dispatch = useDispatch();
 
-  const setImporter = (companyName) => {
+  const setImporter = (id) => {
     const foundImporter = currentUser?.importers?.find(
-      (item) => item?.companyName === companyName
+      (item) => item?.id === id
     );
 
     if (foundImporter ?? false) {
@@ -38,14 +36,23 @@ const Importer = ({ setCurrentStep, onClose }) => {
         <h2 className={styles.heading}>Importer Details</h2> <Divider />
         <Form form={form} layout="vertical">
           <Form.Item label="Select Importer" name="name">
-            <CustomSelect
-              defaultValue={importer?.companyName}
-              onClear={onClear}
+            <Select
+              defaultValue={importer?.companyName ?? ""}
               placeholder="Select Importer"
+              allowClear
+              showSearch
+              onClear={onClear}
+              loading={userLoading}
               onChange={(value) => setImporter(value)}
-              items={currentUser?.importers ?? []}
-              renderType={SELECT_TYPE.IMPORT}
-            />
+            >
+              {currentUser?.importers?.map((item) => (
+                <Option key={item?.companyName} value={item?.id}>
+                  <Row justify="space-between">
+                    <Col>{item?.companyName}</Col>
+                  </Row>
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
         </Form>
         <Divider />

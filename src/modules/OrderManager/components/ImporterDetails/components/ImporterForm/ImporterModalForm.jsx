@@ -1,4 +1,9 @@
-import { Button, Col, Divider, Form, Input, Row, Select } from "antd";
+import { Col, Form, Input, Row, Select } from "antd";
+import { v4 as uuidv4 } from "uuid";
+import {
+  EDIT_IMPORTER,
+  ADD_IMPORTER,
+} from "@/modules/UserManagement/constants/userConstants";
 import React, {
   Fragment,
   forwardRef,
@@ -7,84 +12,73 @@ import React, {
 } from "react";
 import { countries } from "@/utils/countries";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  createOrder,
-  updateOrder,
-  updateOrderImporter,
-} from "@/redux/order/actions";
-import { getOrder } from "@/redux/order/selectors";
 import { isEmpty } from "lodash";
 import { selectAuth } from "@/redux/auth/selectors";
-import styles from "./importerForm.module.less";
+import { fetchUserData, updateUser } from "@/redux/auth/actions";
+
+import styles from "./importerModalForm.module.less";
 
 const { Option } = Select;
 
-const ImporterForm = forwardRef(({ setCurrentStep, onClose }, ref) => {
-  const { _id, importer, exporter, container, shipping, finance, isLoading } =
-    useSelector(getOrder);
-  const { userLoading } = useSelector(selectAuth);
+const ImporterModalForm = forwardRef(({ data, type, onClose }, ref) => {
+  const { current: currentUser, userLoading } = useSelector(selectAuth);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+
+  const importers = currentUser?.importers ?? [];
+
+  const onFinish = (values) => {
+    if (userLoading) {
+      return;
+    }
+    try {
+      if (type === EDIT_IMPORTER && data) {
+        values.id = data.id;
+        const filteredArr = importers?.filter(
+          (item) => item?.id !== values?.id
+        );
+        dispatch(
+          updateUser(currentUser?.id, {
+            importers: [...(filteredArr || []), { ...values }],
+          })
+        );
+      } else if (type === ADD_IMPORTER) {
+        values.id = uuidv4();
+        dispatch(
+          updateUser(currentUser?.id, {
+            importers: [...(importers || []), { ...values }],
+          })
+        );
+      }
+    } catch (error) {
+    } finally {
+      dispatch(fetchUserData(currentUser?.id));
+      onClose();
+    }
+  };
 
   useImperativeHandle(
     ref,
     () => {
       return {
-        resetForm() {
-          form?.resetFields();
+        submitForm() {
+          form?.submit();
         },
       };
     },
     []
   );
 
-  const onFinish = (values) => {
-    if (userLoading) {
-      return;
-    }
-
-    try {
-      dispatch(updateOrderImporter({ ...values }));
-    } catch (error) {
-    } finally {
-      setCurrentStep(2);
-    }
-  };
-
-  const handleOnClose = () => {
-    if (isLoading) return;
-    const orderObject = {
-      _id: _id ?? null,
-      status: "DRAFT",
-      importer: importer,
-      exporter: exporter,
-      container: container,
-      shipping: shipping,
-      finance: finance,
-    };
-
-    if (orderObject._id) {
-      dispatch(updateOrder(orderObject));
-    } else {
-      dispatch(createOrder(orderObject));
-    }
-    onClose();
-  };
-
-  const handleBack = () => {
-    setCurrentStep(0);
-  };
-
   useEffect(() => {
-    if (!isEmpty(importer)) {
+    if (!isEmpty(data)) {
       form.setFieldsValue({
-        companyName: importer.companyName,
-        addressNo: importer.addressNo,
-        address: importer.address,
-        country: importer.country,
+        companyName: data.companyName,
+        addressNo: data.addressNo,
+        address: data.address,
+        country: data.country,
       });
     }
-  }, [importer]);
+  }, [data]);
 
   return (
     <Fragment>
@@ -92,7 +86,7 @@ const ImporterForm = forwardRef(({ setCurrentStep, onClose }, ref) => {
         form={form}
         layout="vertical"
         onFinish={onFinish}
-        disabled={isLoading}
+        disabled={userLoading}
       >
         <Row gutter={32}>
           <Col span={24}>
@@ -167,38 +161,9 @@ const ImporterForm = forwardRef(({ setCurrentStep, onClose }, ref) => {
             </Form.Item>{" "}
           </Col>
         </Row>{" "}
-        <div className={styles.buttonContainer}>
-          <Divider />
-          <Row gutter={24}>
-            <Col span={4}>
-              <Button
-                className={styles.nextButton}
-                onClick={() => handleBack()}
-              >
-                Back
-              </Button>
-            </Col>
-            <Col span={20}>
-              <Button
-                type="primary"
-                htmlType="submit"
-                className={styles.nextButton}
-              >
-                Next
-              </Button>
-            </Col>
-          </Row>
-          <Button
-            loading={userLoading}
-            disabled={userLoading}
-            onClick={() => handleOnClose()}
-          >
-            Save as draft & close
-          </Button>
-        </div>
       </Form>
     </Fragment>
   );
 });
 
-export default ImporterForm;
+export default ImporterModalForm;

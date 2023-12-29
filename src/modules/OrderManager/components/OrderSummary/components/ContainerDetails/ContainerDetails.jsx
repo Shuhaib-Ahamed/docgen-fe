@@ -78,15 +78,7 @@ const ContainerDetails = forwardRef((props, ref) => {
       <Divider className={styles.divider} />{" "}
       <Row gutter={32}>
         <Col span={12}>
-          <Form.Item
-            label="Container Release Number"
-            name="releaseNumber"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
+          <Form.Item label="Container Release Number" name="releaseNumber">
             <Input autoComplete="off" />
           </Form.Item>
         </Col>{" "}
@@ -102,28 +94,12 @@ const ContainerDetails = forwardRef((props, ref) => {
       </Row>
       <Row gutter={32}>
         <Col span={12}>
-          <Form.Item
-            label="Releasing From"
-            name="releaseFrom"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
+          <Form.Item label="Releasing From" name="releaseFrom">
             <Input autoComplete="off" />
           </Form.Item>
         </Col>{" "}
         <Col span={12}>
-          <Form.Item
-            label="Releasing To"
-            name="releaseTo"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
+          <Form.Item label="Releasing To" name="releaseTo">
             <Input autoComplete="off" />
           </Form.Item>
         </Col>

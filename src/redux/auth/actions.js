@@ -49,6 +49,25 @@ export const updateUser = (id, data) => async (dispatch) => {
   }
 };
 
+export const fetchUserData = (id) => async (dispatch) => {
+  dispatch({
+    type: actionTypes.AUTH_UPDATE_LOADING,
+    payload: true,
+  });
+  const response = await authService.fetchUser(id);
+  if (response.success === true) {
+    dispatch({
+      type: actionTypes.UPDATE_USER,
+      payload: response.result,
+    });
+  } else {
+    dispatch({
+      type: actionTypes.AUTH_UPDATE_LOADING,
+      payload: false,
+    });
+  }
+};
+
 export const logout = () => async (dispatch) => {
   authService.logout();
   dispatch({

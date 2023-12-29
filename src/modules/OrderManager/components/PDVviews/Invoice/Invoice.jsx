@@ -118,7 +118,8 @@ const Invoice = ({ importer, finance, shipping, container }) => {
                 <Col span={12}>
                   <h4
                     className={`${styles.label} ${
-                      shipping?.vesselName ?? styles.warningText
+                      (shipping?.vesselName || shipping?.voyageNo) ??
+                      styles.warningText
                     }`}
                   >
                     VESSEL :{" "}
@@ -126,7 +127,8 @@ const Invoice = ({ importer, finance, shipping, container }) => {
                 </Col>
                 <Col span={12}>
                   <p contentEditable className={styles.text}>
-                    {shipping?.vesselName}
+                    {shipping?.vesselName} {shipping?.voyageNo && "/"}{" "}
+                    {shipping?.voyageNo}
                   </p>
                 </Col>
               </Row>
@@ -134,13 +136,7 @@ const Invoice = ({ importer, finance, shipping, container }) => {
             <Col span={12}>
               <Row>
                 <Col span={12}>
-                  <h4
-                    className={`${styles.label} ${
-                      shipping?.departureDate ?? styles.warningText
-                    }`}
-                  >
-                    DEPARTURE DATE :{" "}
-                  </h4>
+                  <h4 className={styles.label}>DEPARTURE DATE : </h4>
                 </Col>
                 <Col span={12}>
                   <p className={styles.text}>
@@ -310,12 +306,12 @@ const Invoice = ({ importer, finance, shipping, container }) => {
                 </Col>
                 <Col span={8}>
                   <p contentEditable className={styles.text}>
-                    {finance?.usdMT}
+                    ($) {finance?.usdMT}
                   </p>
                 </Col>
                 <Col span={8}>
                   <p contentEditable className={styles.text}>
-                    {finance?.total}
+                    ($) {finance?.total}
                   </p>
                 </Col>
               </Row>
@@ -414,12 +410,12 @@ const Invoice = ({ importer, finance, shipping, container }) => {
                   </Col>
                   <Col span={8}>
                     <h4 contentEditable className={styles.label}>
-                      {finance?.usdMT}
+                      ($) {finance?.usdMT}
                     </h4>
                   </Col>
                   <Col span={8}>
                     <h4 contentEditable className={styles.label}>
-                      {finance?.total}
+                      ($) {finance?.total}
                     </h4>
                   </Col>
                 </Row>

@@ -13,11 +13,13 @@ import { addShippmentDetails } from "@/redux/order/actions";
 import { isEmpty } from "lodash";
 
 import styles from "./shippingDetails.module.less";
+import { selectAuth } from "@/redux/auth/selectors";
 
 const { Option } = Select;
 
 const ShippingDetails = forwardRef((props, ref) => {
   const [form] = Form.useForm();
+  const { current: currentUser, userLoading } = useSelector(selectAuth);
   const dispatch = useDispatch();
   const [transCountry, setTransCountry] = useState("");
   const { isLoading, shipping } = useSelector(getOrder);
@@ -63,6 +65,29 @@ const ShippingDetails = forwardRef((props, ref) => {
       dispatch(addShippmentDetails({ ...shipping, ...value }));
   };
 
+  const setShipper = (id) => {
+    const foundShipper = currentUser?.shippers?.find((item) => item?.id === id);
+
+    const shipperValues = {
+      shippingCompany: foundShipper?.shippingCompany,
+      shippingContactName: foundShipper?.shippingContactName,
+      shippingContactNo: foundShipper?.shippingContactNo,
+    };
+
+    if (foundShipper) {
+      dispatch(addShippmentDetails({ ...shipping, ...shipperValues }));
+    }
+  };
+
+  const onClear = () => {
+    const emptyValues = {
+      shippingCompany: undefined,
+      shippingContactName: undefined,
+      shippingContactNo: undefined,
+    };
+    dispatch(addShippmentDetails({ ...shipping, ...emptyValues }));
+  };
+
   useEffect(() => {
     if (!isEmpty(shipping)) {
       form?.setFieldsValue({
@@ -93,7 +118,7 @@ const ShippingDetails = forwardRef((props, ref) => {
       setDischargeCountry(portLoadCountry);
       setLoadCountry(portDischargeCountry);
     }
-  }, []);
+  }, [shipping]);
 
   return (
     <Form
@@ -104,7 +129,26 @@ const ShippingDetails = forwardRef((props, ref) => {
       onValuesChange={dispatchOnChange}
     >
       <h1 className={styles.subHeading}>Shipping Details</h1>
-      <Divider className={styles.divider} />{" "}
+      <Divider className={styles.divider} />
+      <Form.Item label="Select Shipper">
+        <Select
+          defaultValue={shipping?.shippingCompany ?? ""}
+          placeholder="Select Shipper"
+          allowClear
+          showSearch
+          onClear={onClear}
+          onChange={(value) => setShipper(value)}
+          loading={userLoading}
+        >
+          {currentUser?.shippers?.map((item) => (
+            <Option key={item?.shippingCompany} value={item?.id}>
+              <Row justify="space-between">
+                <Col>{item?.shippingCompany}</Col>
+              </Row>
+            </Option>
+          ))}
+        </Select>{" "}
+      </Form.Item>
       <Row gutter={32}>
         <Col span={8}>
           <Form.Item
@@ -148,28 +192,12 @@ const ShippingDetails = forwardRef((props, ref) => {
       </Row>
       <Row gutter={32}>
         <Col span={18}>
-          <Form.Item
-            label="Vessel Name"
-            name="vesselName"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
+          <Form.Item label="Vessel Name" name="vesselName">
             <Input autoComplete="off" />
           </Form.Item>
         </Col>{" "}
         <Col span={6}>
-          <Form.Item
-            label="Departure Date"
-            name="departureDate"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
+          <Form.Item label="Departure Date" name="departureDate">
             <DatePicker
               className={styles.dateLable}
               onChange={onDateChange}
@@ -180,28 +208,12 @@ const ShippingDetails = forwardRef((props, ref) => {
       </Row>
       <Row gutter={32}>
         <Col span={6}>
-          <Form.Item
-            label="Voyage Number"
-            name="voyageNo"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
+          <Form.Item label="Voyage Number" name="voyageNo">
             <Input autoComplete="off" />
           </Form.Item>
         </Col>
         <Col span={18}>
-          <Form.Item
-            label="Transshipment"
-            name="transshipment"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
+          <Form.Item label="Transshipment" name="transshipment">
             <Select
               value={transCountry}
               showSearch
@@ -337,28 +349,12 @@ const ShippingDetails = forwardRef((props, ref) => {
       </div>{" "}
       <Row gutter={32}>
         <Col span={12}>
-          <Form.Item
-            label="Booking Reference"
-            name="bookingRef"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
+          <Form.Item label="Booking Reference" name="bookingRef">
             <Input autoComplete="off" />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item
-            label="Sales Contract Number"
-            name="salesContractNumber"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
+          <Form.Item label="Sales Contract Number" name="salesContractNumber">
             <Input autoComplete="off" />
           </Form.Item>
         </Col>

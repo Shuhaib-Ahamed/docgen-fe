@@ -40,6 +40,7 @@ export default function SearchItem({ config }) {
         },
       ]);
   }, [isLoading]);
+  
   const onSearch = (searchText) => {
     isTyping.current = true;
 

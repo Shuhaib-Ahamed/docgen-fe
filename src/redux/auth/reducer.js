@@ -30,6 +30,8 @@ const authReducer = (state = INITIAL_STATE, action) => {
         isLoggedIn: true,
         userLoading: false,
       };
+    case actionTypes.UPDATE_USER:
+      return { ...state, current: action.payload, userLoading: false };
     case actionTypes.LOGOUT_SUCCESS:
       return INITIAL_STATE;
 

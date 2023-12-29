@@ -250,29 +250,26 @@ const PackingInstrictions = ({ importer, finance, shipping, container }) => {
                 </Col>
                 <Col span={12}>
                   <p contentEditable className={styles.text}>
-                    {shipping?.vesselName} / {shipping?.voyageNo}
+                    {shipping?.vesselName} {shipping?.voyageNo && "/"}{" "}
+                    {shipping?.voyageNo}
                   </p>
                 </Col>
               </Row>
             </Col>
-            <Col span={12}>
-              <Row>
-                <Col span={12}>
-                  <h4
-                    className={`${styles.label} ${
-                      shipping?.departureDate ?? styles.warningText
-                    }`}
-                  >
-                    DEPARTURE DATE :{" "}
-                  </h4>
-                </Col>
-                <Col span={12}>
-                  <p contentEditable className={styles.text}>
-                    {convertDate(shipping?.departureDate)}
-                  </p>
-                </Col>
-              </Row>
-            </Col>
+            {shipping?.departureDate && (
+              <Col span={12}>
+                <Row>
+                  <Col span={12}>
+                    <h4 className={styles.label}>DEPARTURE DATE : </h4>
+                  </Col>
+                  <Col span={12}>
+                    <p contentEditable className={styles.text}>
+                      {convertDate(shipping?.departureDate)}
+                    </p>
+                  </Col>
+                </Row>
+              </Col>
+            )}
           </Row>
           <Row
             justify="space-between"

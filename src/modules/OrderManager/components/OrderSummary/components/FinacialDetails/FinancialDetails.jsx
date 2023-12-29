@@ -65,6 +65,14 @@ const FinancialDetails = forwardRef((props, ref) => {
     if (qty && usdValue) {
       const total = (qty * usdValue).toFixed(2);
       form.setFieldValue("total", total);
+      dispatch(
+        addFinanceDetails({
+          ...finance,
+          quantity: qty,
+          usdMT: usdValue,
+          total: total,
+        })
+      );
     } else {
       form.setFieldValue("total", undefined);
     }
@@ -120,6 +128,9 @@ const FinancialDetails = forwardRef((props, ref) => {
                 placeholder="Name of the Good"
                 items={currentUser.goods ?? []}
                 renderType={SELECT_TYPE.GOOD}
+                onChange={(value) => {
+                  dispatch(addFinanceDetails({ ...finance, name: value }));
+                }}
               />
             </Form.Item>
           </Col>
@@ -138,6 +149,11 @@ const FinancialDetails = forwardRef((props, ref) => {
                 placeholder="Name of the Good"
                 items={currentUser.specifications ?? []}
                 renderType={SELECT_TYPE.SPEC}
+                onChange={(value) => {
+                  dispatch(
+                    addFinanceDetails({ ...finance, specification: value })
+                  );
+                }}
               />
             </Form.Item>
           </Col>
@@ -245,84 +261,36 @@ const FinancialDetails = forwardRef((props, ref) => {
         </Row>{" "}
         <Row gutter={32}>
           <Col span={12}>
-            <Form.Item
-              label="EDN Number"
-              name="edn"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
+            <Form.Item label="EDN Number" name="edn">
               <Input autoComplete="off" />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item
-              label="RFP Number"
-              name="rfp"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
+            <Form.Item label="RFP Number" name="rfp">
               <Input type="number" autoComplete="off" />
             </Form.Item>
           </Col>{" "}
         </Row>{" "}
         <Row gutter={32}>
           <Col span={8}>
-            <Form.Item
-              label="Invoice Number"
-              name="invoiceNo"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
+            <Form.Item label="Invoice Number" name="invoiceNo">
               <Input autoComplete="off" />
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item
-              label="PI Number"
-              name="piNo"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
+            <Form.Item label="PI Number" name="piNo">
               <Input autoComplete="off" />
             </Form.Item>
           </Col>{" "}
           <Col span={8}>
-            <Form.Item
-              label="Reference Number"
-              name="refNo"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
+            <Form.Item label="Reference Number" name="refNo">
               <Input autoComplete="off" />
             </Form.Item>
           </Col>{" "}
         </Row>{" "}
         <Row gutter={32}>
           <Col span={8}>
-            <Form.Item
-              label="Frieght Cost"
-              name="frieghtCost"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
+            <Form.Item label="Frieght Cost" name="frieghtCost">
               <InputNumber
                 className={styles.dateLable}
                 autoComplete="off"
@@ -334,15 +302,7 @@ const FinancialDetails = forwardRef((props, ref) => {
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item
-              label="Insuarance Cost"
-              name="insuaranceCost"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
+            <Form.Item label="Insuarance Cost" name="insuaranceCost">
               <InputNumber
                 className={styles.dateLable}
                 autoComplete="off"
@@ -354,15 +314,7 @@ const FinancialDetails = forwardRef((props, ref) => {
             </Form.Item>
           </Col>{" "}
           <Col span={8}>
-            <Form.Item
-              label="Total Cost"
-              name="totalCost"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
+            <Form.Item label="Total Cost" name="totalCost">
               <InputNumber
                 autoComplete="off"
                 className={styles.dateLable}

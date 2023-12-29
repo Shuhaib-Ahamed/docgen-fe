@@ -42,6 +42,17 @@ export const updateUser = async (id, data) => {
   }
 };
 
+export const fetchUser = async (id) => {
+  try {
+    const response = await axiosInstance.get(
+      API_BASE_URL + `admin/fetch/${id}`
+    );
+    return successHandler(response);
+  } catch (error) {
+    return errorHandler(error);
+  }
+};
+
 export const logout = () => {
   token.remove();
   storePersist.clear();

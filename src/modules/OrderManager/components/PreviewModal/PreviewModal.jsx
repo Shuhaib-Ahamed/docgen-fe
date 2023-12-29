@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import generatePDF, { Margin, Resolution } from "react-to-pdf";
 
 import styles from "./preview.module.less";
+import RFP from "../PDVviews/RFPcomponent/RFP";
 
 const options = (filename) => ({
   filename: filename,
@@ -147,6 +148,18 @@ const PreviewModal = (props) => {
                         />
                       </div>
                     </div>
+                  </div>
+                );
+              case MODAL_TYPE.OCR:
+                return (
+                  <div className={styles.wrapper}>
+                    <RFP
+                      importer={importer}
+                      exporter={exporter}
+                      container={container}
+                      shipping={shipping}
+                      finance={finance}
+                    />
                   </div>
                 );
 
