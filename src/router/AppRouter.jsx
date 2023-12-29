@@ -1,10 +1,13 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 import PageLoader from "@/components/PageLoader";
 import AdminOnlyRoute from "./AdminOnlyRoute";
+import { fetchUserData } from "@/redux/auth/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAuth } from "@/redux/auth/selectors";
 
 const Dashboard = lazy(() =>
   import(/*webpackChunkName:'DashboardPage'*/ "@/pages/Dashboard")
@@ -38,7 +41,14 @@ const NotFound = lazy(() =>
 );
 
 export default function AppRouter() {
+  const { current } = useSelector(selectAuth);
   const location = useLocation();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUserData(current?.id ?? ""));
+  }, []);
+
   return (
     <Suspense fallback={<PageLoader />}>
       <AnimatePresence exitBeforeEnter initial={false}>

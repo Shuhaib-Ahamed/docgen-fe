@@ -5,7 +5,7 @@ import PublicRoute from "./PublicRoute";
 import PageLoader from "@/components/PageLoader";
 
 const Login = lazy(() =>
-  import(/*webpackChunkName:'LoginPage'*/ "@/pages/Login")
+  import(/*webpackChunkName:'LoginPage'*/ "@/pages/Login/Login")
 );
 
 const NotFound = lazy(() =>

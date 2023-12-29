@@ -8,7 +8,7 @@ const Logout = () => {
 
   useEffect(() => {
     async function asyncLogout() {
-      await dispatch(logoutAction());
+      dispatch(logoutAction());
     }
     asyncLogout();
   }, []);

@@ -7,8 +7,6 @@ import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
 import * as serviceWorker from "./serviceWorker";
 
-console.log("process env", process.env.NODE_ENV);
-
 ReactDOM.render(<App />, document.getElementById("root"));
 
 // If you want your app to work offline and load faster, you can change
