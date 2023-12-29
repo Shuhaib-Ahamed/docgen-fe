@@ -39,6 +39,8 @@ const AddOrEditUsers = (props) => {
             goods: currentUser.goods ?? [],
             specifications: currentUser.specifications ?? [],
             importers: currentUser.importers ?? [],
+            surveyors: currentUser.surveyors ?? [],
+            packers: currentUser.packers ?? [],
           })
         );
       } else if (type === EDIT_USER && data?._id) {
