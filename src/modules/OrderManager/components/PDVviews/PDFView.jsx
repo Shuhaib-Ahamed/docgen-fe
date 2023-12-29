@@ -97,7 +97,7 @@ const PDFView = ({ setCurrentStep, onClose }) => {
     onClose();
   };
 
-  const downloadDocuments = () => {
+  const downloadAllDocuments = () => {
     const refs = [invoiceRef, packingRef, salesRef];
     const filenames = ["invoice.pdf", "packing.pdf", "sales.pdf"];
 
@@ -213,7 +213,7 @@ const PDFView = ({ setCurrentStep, onClose }) => {
                 type="primary"
                 htmlType="submit"
                 className={styles.nextButton}
-                onClick={() => downloadDocuments()}
+                onClick={() => downloadAllDocuments()}
               >
                 Save & Download Documents
               </Button>

@@ -87,7 +87,6 @@ const SurveyorModalForm = forwardRef(({ data, type, onClose }, ref) => {
         country: data.country,
         contactEmail: data.contactEmail,
         contactName: data.contactName,
-        sample: data.sample,
       });
     }
   }, [data]);
@@ -200,21 +199,7 @@ const SurveyorModalForm = forwardRef(({ data, type, onClose }, ref) => {
             </Form.Item>
           </Col>{" "}
         </Row>{" "}
-        <Row gutter={32}>
-          <Col span={24}>
-            <Form.Item
-              label="Packer Description"
-              name="sample"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input autoComplete="off" />
-            </Form.Item>
-          </Col>{" "}
-        </Row>{" "}
+       
       </Form>
     </Fragment>
   );

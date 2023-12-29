@@ -103,7 +103,7 @@ const SurveyorForm = forwardRef(({ setCurrentStep, onClose }, ref) => {
         country: surveys.country,
         contactEmail: surveys.contactEmail,
         contactName: surveys.contactName,
-        sample: surveys.sample,
+
       });
     }
   }, [surveys]);
@@ -213,21 +213,6 @@ const SurveyorForm = forwardRef(({ setCurrentStep, onClose }, ref) => {
               ]}
             >
               <Input type="email" autoComplete="off" />
-            </Form.Item>
-          </Col>{" "}
-        </Row>{" "}
-        <Row gutter={32}>
-          <Col span={24}>
-            <Form.Item
-              label="Packer Description"
-              name="sample"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input autoComplete="off" />
             </Form.Item>
           </Col>{" "}
         </Row>{" "}
