@@ -2,6 +2,8 @@ export const SELECT_TYPE = {
   IMPORT: "IMPORT",
   GOOD: "GOOD",
   SPEC: "SPEC",
+  PACKER: "PACKER",
+  SAMPLE: "SAMPLE",
   NEW_TYPE: "NEW_TYPE",
 };
 

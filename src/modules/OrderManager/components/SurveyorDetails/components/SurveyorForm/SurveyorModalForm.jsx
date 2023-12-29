@@ -1,76 +1,96 @@
-import { Button, Col, Divider, Form, Input, Row, Select } from "antd";
-import React, { Fragment, useEffect, useState } from "react";
-import { expDetails } from "../constants/constants";
+import { Col, Form, Input, Row, Select } from "antd";
+import { v4 as uuidv4 } from "uuid";
+import {
+  EDIT_SURVEYOR,
+  ADD_SURVEYOR,
+} from "@/modules/UserManagement/constants/userConstants";
+import React, {
+  Fragment,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+} from "react";
 import { countries } from "@/utils/countries";
 import { useDispatch, useSelector } from "react-redux";
-import { getOrder } from "@/redux/order/selectors";
 import { isEmpty } from "lodash";
-import { createOrder, updateOrder } from "@/redux/order/actions";
-const { Option } = Select;
-import styles from "./exporterForm.module.less";
+import { selectAuth } from "@/redux/auth/selectors";
+import { fetchUserData, updateUser } from "@/redux/auth/actions";
 
-const ExporterForm = ({ setCurrentStep, onClose }) => {
-  const {
-    _id,
-    importer,
-    exporter,
-    container,
-    shipping,
-    finance,
-    surveys,
-    isLoading,
-  } = useSelector(getOrder);
+import styles from "./surveyorModalForm.module.less";
+
+const { Option } = Select;
+
+const SurveyorModalForm = forwardRef(({ data, type, onClose }, ref) => {
+  const { current: currentUser, userLoading } = useSelector(selectAuth);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
-  const onFinish = () => {
-    setCurrentStep(1);
+  const surveyors = currentUser?.surveyors ?? [];
+
+  const onFinish = (values) => {
+    if (userLoading) {
+      return;
+    }
+    try {
+      if (type === EDIT_SURVEYOR && data) {
+        values.id = data.id;
+        const filteredArr = surveyors?.filter(
+          (item) => item?.id !== values?.id
+        );
+        dispatch(
+          updateUser(currentUser?.id, {
+            surveyors: [...(filteredArr || []), { ...values }],
+          })
+        );
+      } else if (type === ADD_SURVEYOR) {
+        values.id = uuidv4();
+        dispatch(
+          updateUser(currentUser?.id, {
+            surveyors: [...(surveyors || []), { ...values }],
+          })
+        );
+      }
+    } catch (error) {
+    } finally {
+      dispatch(fetchUserData(currentUser?.id));
+      onClose();
+    }
   };
 
-  const handleOnClose = () => {
-    if (isLoading) return;
-    const orderObject = {
-      _id: _id ?? null,
-      status: "DRAFT",
-      importer: importer,
-      exporter: exporter,
-      container: container,
-      shipping: shipping,
-      finance: finance,
-      surveys: surveys,
-    };
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        submitForm() {
+          form?.submit();
+        },
+      };
+    },
+    []
+  );
 
-    if (orderObject._id) {
-      dispatch(updateOrder(orderObject));
+  const validateEmail = (rule, value, callback) => {
+    const emailRegex = /^[A-Za-z0-9+_.-]+@(.+)$/;
+    if (!emailRegex.test(value)) {
+      callback("Invalid email address");
     } else {
-      dispatch(createOrder(orderObject));
+      callback();
     }
-    onClose();
   };
 
   useEffect(() => {
-    if (!isEmpty(exporter)) {
+    if (!isEmpty(data)) {
       form.setFieldsValue({
-        companyName: exporter.companyName,
-        attendee: exporter.attendee,
-        addressNo: exporter.addressNo,
-        address: exporter.address,
-        email: exporter.email,
-        country: exporter.country,
-        phoneNo: exporter.phoneNo,
-      });
-    } else {
-      form.setFieldsValue({
-        companyName: expDetails.companyName,
-        attendee: expDetails.attendee,
-        addressNo: expDetails.addressNo,
-        address: expDetails.address,
-        email: expDetails.email,
-        country: expDetails.country,
-        phoneNo: expDetails.phoneNo,
+        companyName: data.companyName,
+        addressNo: data.addressNo,
+        address: data.address,
+        country: data.country,
+        contactEmail: data.contactEmail,
+        contactName: data.contactName,
+        sample: data.sample,
       });
     }
-  }, []);
+  }, [data]);
 
   return (
     <Fragment>
@@ -78,10 +98,10 @@ const ExporterForm = ({ setCurrentStep, onClose }) => {
         form={form}
         layout="vertical"
         onFinish={onFinish}
-        disabled={isLoading}
+        disabled={userLoading}
       >
         <Row gutter={32}>
-          <Col span={18}>
+          <Col span={24}>
             <Form.Item
               label="Company Name"
               name="companyName"
@@ -94,22 +114,9 @@ const ExporterForm = ({ setCurrentStep, onClose }) => {
               <Input autoComplete="off" />
             </Form.Item>
           </Col>{" "}
-          <Col span={6}>
-            <Form.Item
-              label="Attendee Name"
-              name="attendee"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input autoComplete="off" />
-            </Form.Item>
-          </Col>
         </Row>{" "}
         <Row gutter={32}>
-          <Col span={6}>
+          <Col span={4}>
             <Form.Item
               label="Address No"
               name="addressNo"
@@ -122,7 +129,7 @@ const ExporterForm = ({ setCurrentStep, onClose }) => {
               <Input autoComplete="off" />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col span={14}>
             <Form.Item
               label="Street Address"
               name="address"
@@ -165,25 +172,12 @@ const ExporterForm = ({ setCurrentStep, onClose }) => {
               </Select>
             </Form.Item>{" "}
           </Col>
-        </Row>
+        </Row>{" "}
         <Row gutter={32}>
           <Col span={12}>
             <Form.Item
-              label="Email"
-              name="email"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input type="email" autoComplete="off" />
-            </Form.Item>
-          </Col>{" "}
-          <Col span={12}>
-            <Form.Item
-              label="Phone Number"
-              name="phoneNo"
+              label="Contact Name"
+              name="contactName"
               rules={[
                 {
                   required: true,
@@ -192,22 +186,38 @@ const ExporterForm = ({ setCurrentStep, onClose }) => {
             >
               <Input autoComplete="off" />
             </Form.Item>
-          </Col>
-        </Row>
-        <div className={styles.buttonContainer}>
-          <Divider />
-          <Button
-            type="primary"
-            htmlType="submit"
-            className={styles.nextButton}
-          >
-            Next
-          </Button>
-          <Button onClick={() => handleOnClose()}>Save as draft & close</Button>
-        </div>
+          </Col>{" "}
+          <Col span={12}>
+            <Form.Item
+              label="Email"
+              name="contactEmail"
+              rules={[
+                { required: true, message: "Email is required" },
+                { validator: validateEmail },
+              ]}
+            >
+              <Input type="email" autoComplete="off" />
+            </Form.Item>
+          </Col>{" "}
+        </Row>{" "}
+        <Row gutter={32}>
+          <Col span={24}>
+            <Form.Item
+              label="Packer Description"
+              name="sample"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input autoComplete="off" />
+            </Form.Item>
+          </Col>{" "}
+        </Row>{" "}
       </Form>
     </Fragment>
   );
-};
+});
 
-export default ExporterForm;
+export default SurveyorModalForm;

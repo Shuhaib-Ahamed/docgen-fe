@@ -14,5 +14,6 @@ export const RESET_LOADING = "RESET_LOADING";
 export const SET_LOADING = "SET_LOADING";
 
 export const ADD_SHIPPING = "ADD_SHIPPING";
+export const ADD_SURVEY = "ADD_SURVEY";
 export const ADD_FINANCE = "ADD_FINANCE";
 export const ADD_CONTAINER = "ADD_CONTAINER";

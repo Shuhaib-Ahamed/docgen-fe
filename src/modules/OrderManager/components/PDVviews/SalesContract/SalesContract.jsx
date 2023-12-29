@@ -7,7 +7,7 @@ import Footer from "../components/Footer/Footer";
 import styles from "./sales.module.less";
 import { convertDate, getFormattedDate } from "@/utils/helpers";
 
-const SalesContract = ({ importer, finance, shipping }) => {
+const SalesContract = ({ importer, finance, shipping, surveys }) => {
   return (
     <div className={styles.pdfContainer}>
       <Header />

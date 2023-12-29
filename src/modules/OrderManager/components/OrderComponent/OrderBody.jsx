@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import PDFView from "../PDVviews/PDFView";
 
 import styles from "./order.module.less";
+import Surveyor from "../SurveyorDetails/Surveyor";
 
 const Step = Steps.Step;
 
@@ -46,13 +47,18 @@ const OrderBody = ({ onClose, setCurrent, current }) => {
           className={status === "PUBLISHED" && styles.steps}
         ></Step>
         <Step
-          title="Order Summary"
+          title="Surveyor Details"
           onClick={() => handleStepClick(2)}
           className={status === "PUBLISHED" && styles.steps}
         ></Step>
         <Step
-          title="Review and Upload"
+          title="Order Summary"
           onClick={() => handleStepClick(3)}
+          className={status === "PUBLISHED" && styles.steps}
+        ></Step>
+        <Step
+          title="Review and Upload"
+          onClick={() => handleStepClick(4)}
           className={status === "PUBLISHED" && styles.steps}
         ></Step>
       </Steps>
@@ -80,13 +86,22 @@ const OrderBody = ({ onClose, setCurrent, current }) => {
           case 2:
             return (
               <div className={styles.stepBody}>
-                <OrderSummary
+                <Surveyor
                   setCurrentStep={setCurrentStep}
                   onClose={resetOnClose}
                 />
               </div>
             );
           case 3:
+            return (
+              <div className={styles.stepBody}>
+                <OrderSummary
+                  setCurrentStep={setCurrentStep}
+                  onClose={resetOnClose}
+                />
+              </div>
+            );
+          case 4:
             return (
               <div className={styles.stepBody}>
                 <div className={styles.stepBody}>

@@ -53,7 +53,7 @@ const OrderDetailsForm = ({
   };
 
   const handleBack = () => {
-    setCurrentStep(1);
+    setCurrentStep(2);
   };
 
   const handleSubmit = () => {
@@ -71,7 +71,7 @@ const OrderDetailsForm = ({
       console.log("ERROR");
     } finally {
       if (!isEmpty(shipping) && !isEmpty(finance) && !isEmpty(container)) {
-        setCurrentStep(3);
+        setCurrentStep(4);
         document?.getElementsByClassName("ant-drawer-body")[0]?.scrollTo(0, 0);
       }
     }

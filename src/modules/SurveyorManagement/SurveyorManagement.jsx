@@ -22,14 +22,18 @@ import {
 } from "@ant-design/icons";
 import { selectAuth } from "@/redux/auth/selectors";
 import Loading from "@/components/Loading";
-import ShipperModalForm from "../OrderManager/components/ShipperForm/ShipperModalForm";
+import ImporterModalForm from "../OrderManager/components/ImporterDetails/components/ImporterForm/ImporterModalForm";
+
 import {
-  ADD_SHIPPER,
-  EDIT_SHIPPER,
+  ADD_SURVEYOR,
+  EDIT_SURVEYOR,
 } from "../UserManagement/constants/userConstants";
 import { fetchUserData, updateUser } from "@/redux/auth/actions";
+import { countries } from "@/utils/countries";
+import { isUndefined } from "lodash";
 
-import styles from "./shipperManagement.module.less";
+import styles from "./surveyorManagement.module.less";
+import SurveyorModalForm from "../OrderManager/components/SurveyorDetails/components/SurveyorForm/SurveyorModalForm";
 
 const initialState = {
   type: null,
@@ -43,9 +47,9 @@ const initialDeleteState = {
   name: undefined,
 };
 
-const ShipperManagement = () => {
+const SurveyorManagement = () => {
   const dispatch = useDispatch();
-  const shipperFormRef = useRef(null);
+  const surveyorFormRef = useRef(null);
   const { current: currentUser, userLoading } = useSelector(selectAuth);
   const [addEditModal, setAddOrEditModal] = useState(initialState);
   const [deleteModalConfig, setDeleteModalConfig] =
@@ -53,26 +57,24 @@ const ShipperManagement = () => {
   const [value, setValue] = useState("");
   const [options, setOptions] = useState();
 
-  const shippers = currentUser?.shippers ?? [];
+  const surveyors = currentUser.surveyors ?? [];
 
   const onSearch = (searchText) => {
-    const mappedOutput = shippers
+    const mappedOutput = surveyors
       ?.filter((item) =>
-        item?.shippingCompany
-          ?.toLowerCase()
-          ?.includes(searchText?.toLowerCase())
+        item?.companyName?.toLowerCase()?.includes(searchText?.toLowerCase())
       )
       .map((item) => ({
-        label: item?.shippingCompany,
+        label: item?.companyName,
         value: item?.id,
       }));
     setOptions(mappedOutput);
   };
 
   const onSelect = (id) => {
-    const findItem = shippers.find((item) => item.id === id);
-    setValue(findItem?.shippingCompany ?? "");
-    handleAddOrEdit(EDIT_SHIPPER, findItem);
+    const findItem = surveyors?.find((item) => item.id === id);
+    setValue(findItem?.companyName ?? "");
+    handleAddOrEdit(EDIT_SURVEYOR, findItem);
   };
 
   const onChange = (data) => {
@@ -90,26 +92,46 @@ const ShipperManagement = () => {
     setDeleteModalConfig({
       isModalOpen: true,
       selectedId: data?.id,
-      name: data?.shippingCompany,
+      name: data?.companyName,
     });
   };
 
   const columns = [
     {
-      title: "Shipper",
-      dataIndex: "shippingCompany",
-      key: "shippingCompany",
-      sorter: (a, b) => a?.shippingCompany - b?.shippingCompany,
+      title: "Surveyor",
+      dataIndex: "companyName",
+      key: "companyName",
+      sorter: (a, b) => a?.companyName - b?.companyName,
     },
     {
       title: "Contact Name",
-      dataIndex: "shippingContactName",
-      key: "shippingContactName",
+      dataIndex: "contactName",
+      key: "contactName",
     },
     {
-      title: "Phone Number",
-      dataIndex: "shippingContactNo",
-      key: "shippingContactNo",
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+    },
+    {
+      title: "Country",
+      dataIndex: "country",
+      key: "country",
+      render: (_, data) => {
+        const findCountry = countries.find(
+          (item) => item.name.common === data?.country
+        );
+
+        if (isUndefined(findCountry)) {
+          return <>-</>;
+        }
+        return (
+          <div className={styles.optionTag}>
+            <img className={styles.optionFlag} src={findCountry?.flags?.svg} />
+            {findCountry?.name?.common}
+          </div>
+        );
+      },
     },
     {
       title: "Actions",
@@ -119,7 +141,7 @@ const ShipperManagement = () => {
         <Space align="end">
           <Button
             icon={<EditFilled />}
-            onClick={() => handleAddOrEdit(EDIT_SHIPPER, rowData)}
+            onClick={() => handleAddOrEdit(EDIT_SURVEYOR, rowData)}
           >
             Edit
           </Button>
@@ -140,7 +162,7 @@ const ShipperManagement = () => {
   }, []);
 
   const handleSubmit = () => {
-    shipperFormRef?.current?.submitForm();
+    surveyorFormRef?.current?.submitForm();
   };
 
   const onDelete = () => {
@@ -149,12 +171,12 @@ const ShipperManagement = () => {
     }
     try {
       if (!!deleteModalConfig.isModalOpen) {
-        const newFiltered = shippers?.filter(
+        const newFiltered = surveyors?.filter(
           (item) => item.id !== deleteModalConfig.selectedId
         );
         dispatch(
           updateUser(currentUser?.id, {
-            shippers: newFiltered,
+            surveyors: newFiltered,
           })
         );
       }
@@ -173,15 +195,15 @@ const ShipperManagement = () => {
         <div className="tableWrapper">
           <PageHeader
             onBack={() => window.history.back()}
-            title="Shipper Management"
+            title="Surveyor Management"
             ghost={false}
             extra={[
               <Button
                 type="primary"
                 icon={<UserAddOutlined />}
-                onClick={() => handleAddOrEdit(ADD_SHIPPER)}
+                onClick={() => handleAddOrEdit(ADD_SURVEYOR)}
               >
-                Add Shipper
+                Add Surveyor
               </Button>,
               <Button
                 onClick={handelDataTableLoad}
@@ -206,7 +228,7 @@ const ShipperManagement = () => {
               onChange={onChange}
               notFoundContent={<Empty />}
               allowClear={true}
-              placeholder="Search Shippers"
+              placeholder="Search Surveyors"
             >
               <Input suffix={<SearchOutlined />} clearableInput />
             </AutoComplete>
@@ -214,35 +236,35 @@ const ShipperManagement = () => {
           <Table
             columns={columns}
             rowKey={(item) => item._id}
-            dataSource={shippers}
+            dataSource={surveyors}
             loading={userLoading}
           />
         </div>
       </Card>
       <Modal
-        title={addEditModal?.data ? "Edit Shipper" : "Add Shipper"}
+        title={addEditModal?.data ? "Edit Surveyor" : "Add Surveyor"}
         visible={addEditModal.isOpen}
         onOk={() => handleSubmit()}
         onCancel={() => setAddOrEditModal(initialState)}
-        width={500}
-        okText={addEditModal?.data ? "Edit Shipper" : "Add Shipper"}
+        width={1000}
         destroyOnClose
+        okText={addEditModal?.data ? "Edit Surveyor" : "Add Surveyor"}
       >
         <Loading isLoading={userLoading ?? false}>
-          <ShipperModalForm
+          <SurveyorModalForm
             type={addEditModal?.type}
             data={addEditModal?.data ?? null}
-            ref={shipperFormRef}
+            ref={surveyorFormRef}
             onChange={handelDataTableLoad}
             onClose={() => setAddOrEditModal(initialState)}
           />
         </Loading>
       </Modal>
       <Modal
-        title={"Remove Shipper"}
+        title={"Remove Surveyor"}
         visible={deleteModalConfig.isModalOpen}
         onOk={onDelete}
-        okText="Remove Shipper"
+        okText="Remove Surveyor"
         onCancel={() => setDeleteModalConfig(initialDeleteState)}
         confirmLoading={userLoading}
         okButtonProps={{
@@ -261,4 +283,4 @@ const ShipperManagement = () => {
   );
 };
 
-export default ShipperManagement;
+export default SurveyorManagement;

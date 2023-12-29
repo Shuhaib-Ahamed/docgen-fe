@@ -61,8 +61,16 @@ const PDFView = ({ setCurrentStep, onClose }) => {
   const packingRef = useRef(null);
   const salesRef = useRef(null);
   const dispatch = useDispatch();
-  const { isLoading, _id, importer, exporter, container, shipping, finance } =
-    useSelector(getOrder);
+  const {
+    isLoading,
+    _id,
+    importer,
+    exporter,
+    container,
+    shipping,
+    finance,
+    surveys,
+  } = useSelector(getOrder);
 
   const handleOnClose = () => {
     onClose();
@@ -78,6 +86,7 @@ const PDFView = ({ setCurrentStep, onClose }) => {
       container: container,
       shipping: shipping,
       finance: finance,
+      surveys: surveys,
     };
 
     if (orderObject._id) {
@@ -104,7 +113,7 @@ const PDFView = ({ setCurrentStep, onClose }) => {
   };
 
   const handleBack = () => {
-    setCurrentStep(2);
+    setCurrentStep(3);
   };
 
   const getComercialHeader = () => (
@@ -140,6 +149,7 @@ const PDFView = ({ setCurrentStep, onClose }) => {
                     container={container}
                     shipping={shipping}
                     finance={finance}
+                    surveys={surveys}
                   />
                 </div>
               </div>
@@ -155,6 +165,7 @@ const PDFView = ({ setCurrentStep, onClose }) => {
                     container={container}
                     shipping={shipping}
                     finance={finance}
+                    surveys={surveys}
                   />
                 </div>
               </div>
@@ -170,6 +181,7 @@ const PDFView = ({ setCurrentStep, onClose }) => {
                     container={container}
                     shipping={shipping}
                     finance={finance}
+                    surveys={surveys}
                   />
                 </div>
               </div>

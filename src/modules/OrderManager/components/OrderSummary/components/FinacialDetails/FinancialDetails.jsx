@@ -1,19 +1,5 @@
-import {
-  Col,
-  Divider,
-  Form,
-  Input,
-  InputNumber,
-  Modal,
-  Row,
-  Select,
-} from "antd";
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from "react";
+import { Col, Divider, Form, Input, InputNumber, Row } from "antd";
+import React, { forwardRef, useEffect, useImperativeHandle } from "react";
 import { isEmpty } from "lodash";
 import styles from "./financialDetails.module.less";
 import TextArea from "antd/lib/input/TextArea";
@@ -27,10 +13,6 @@ import { selectAuth } from "@/redux/auth/selectors";
 const FinancialDetails = forwardRef((props, ref) => {
   const { current: currentUser } = useSelector(selectAuth);
   const { isLoading, finance } = useSelector(getOrder);
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
@@ -82,6 +64,8 @@ const FinancialDetails = forwardRef((props, ref) => {
     if (!isEmpty(finance)) {
       form.setFieldsValue({
         name: finance?.name,
+        packer: finance?.packer,
+        sample: finance?.sample,
         specification: finance?.specification,
         quantity: finance?.quantity,
         usdMT: finance?.usdMT,
@@ -99,7 +83,7 @@ const FinancialDetails = forwardRef((props, ref) => {
         fclNo: finance?.fclNo,
       });
     }
-  }, []);
+  }, [finance]);
 
   return (
     <>
@@ -146,13 +130,57 @@ const FinancialDetails = forwardRef((props, ref) => {
             >
               <CustomSelect
                 defaultValue={finance?.specification}
-                placeholder="Name of the Good"
+                placeholder="Specification Name"
                 items={currentUser.specifications ?? []}
                 renderType={SELECT_TYPE.SPEC}
                 onChange={(value) => {
                   dispatch(
                     addFinanceDetails({ ...finance, specification: value })
                   );
+                }}
+              />
+            </Form.Item>
+          </Col>
+        </Row>{" "}
+        <Row gutter={32}>
+          <Col span={12}>
+            <Form.Item
+              label="Select Packer"
+              name="packer"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <CustomSelect
+                defaultValue={finance?.packer}
+                placeholder="Packer Name"
+                items={currentUser.packers ?? []}
+                renderType={SELECT_TYPE.PACKER}
+                onChange={(value) => {
+                  dispatch(addFinanceDetails({ ...finance, packer: value }));
+                }}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label="Packer Sample"
+              name="sample"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <CustomSelect
+                defaultValue={finance?.sample}
+                placeholder="Sample Description for the Surveyor"
+                items={currentUser.samples ?? []}
+                renderType={SELECT_TYPE.SAMPLE}
+                onChange={(value) => {
+                  dispatch(addFinanceDetails({ ...finance, sample: value }));
                 }}
               />
             </Form.Item>

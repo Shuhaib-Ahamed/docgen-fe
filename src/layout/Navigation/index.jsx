@@ -9,6 +9,7 @@ import {
   FileOutlined,
   GlobalOutlined,
   CompassOutlined,
+  AlertOutlined,
 } from "@ant-design/icons";
 import { useLocation } from "react-router-dom/cjs/react-router-dom";
 import { selectCurrentAdmin } from "@/redux/auth/selectors";
@@ -51,6 +52,11 @@ function Navigation() {
       path: "/shippers",
       icon: <GlobalOutlined />,
     },
+    {
+      label: "Surveyors",
+      path: "/surveyors",
+      icon: <AlertOutlined />,
+    },
   ];
 
   const keysPrivate = [
@@ -78,6 +84,11 @@ function Navigation() {
       label: "Shippers",
       path: "/shippers",
       icon: <GlobalOutlined />,
+    },
+    {
+      label: "Surveyors",
+      path: "/surveyors",
+      icon: <AlertOutlined />,
     },
     {
       label: " Settings",

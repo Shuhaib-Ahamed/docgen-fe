@@ -16,6 +16,7 @@ const INITIAL_STATE = {
   finance: {},
   shipping: {},
   container: {},
+  surveys: {},
   isLoading: false,
   orderList: [],
 };
@@ -43,6 +44,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
         shipping: action.payload.shipping ?? {},
         importer: action.payload.importer ?? {},
         exporter: action.payload.exporter ?? {},
+        surveys: action.payload.surveys ?? {},
       };
 
     case actionTypes.RESET_CURRENT_ORDER:
@@ -55,6 +57,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
         shipping: {},
         importer: {},
         exporter: {},
+        surveys: {},
       };
 
     case actionTypes.ADD_CONTAINER:
@@ -71,6 +74,11 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         shipping: action.payload,
+      };
+    case actionTypes.ADD_SURVEY:
+      return {
+        ...state,
+        surveys: action.payload,
       };
     case actionTypes.RESET_LOADING:
       return {

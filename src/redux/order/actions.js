@@ -47,6 +47,7 @@ export const updateOrder = (orderData) => async (dispatch) => {
     container: orderData.container,
     shipping: orderData.shipping,
     finance: orderData.finance,
+    surveys: orderData.surveys,
   };
 
   try {
@@ -160,6 +161,13 @@ export const updateOrderImporter = (importerData) => async (dispatch) => {
       type: actionTypes.RESET_LOADING,
     });
   }
+};
+
+export const addSurveyDetails = (survey) => async (dispatch) => {
+  dispatch({
+    type: actionTypes.ADD_SURVEY,
+    payload: survey,
+  });
 };
 
 export const addFinanceDetails = (finance) => async (dispatch) => {

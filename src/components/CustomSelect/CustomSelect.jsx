@@ -25,9 +25,6 @@ export default function CustomSelect(props) {
   const [visible, setVisible] = useState(false);
   const [visibleDelete, setDeleteVisible] = useState(false);
   const [selectedValue, setSelectedValue] = useState(defaultValue ?? "");
-  const showPopUpModal = [SELECT_TYPE.GOOD, SELECT_TYPE.SPEC]?.includes(
-    renderType
-  );
 
   const setDeleteView = (value) => {
     setDeleteVisible(value);
@@ -68,6 +65,24 @@ export default function CustomSelect(props) {
               specifications: newFiltered,
             })
           );
+        } else if (renderType === SELECT_TYPE.PACKER) {
+          const newFiltered = currentUser?.packers?.filter(
+            (item) => item !== visibleDelete
+          );
+          dispatch(
+            updateUser(currentUser?.id, {
+              packers: newFiltered,
+            })
+          );
+        } else if (renderType === SELECT_TYPE.SAMPLE) {
+          const newFiltered = currentUser?.samples?.filter(
+            (item) => item !== visibleDelete
+          );
+          dispatch(
+            updateUser(currentUser?.id, {
+              samples: newFiltered,
+            })
+          );
         }
       }
     } finally {
@@ -97,7 +112,7 @@ export default function CustomSelect(props) {
               goods: newGoods,
             })
           );
-        } else if (SELECT_TYPE.SPEC) {
+        } else if (renderType === SELECT_TYPE.SPEC) {
           if (currentUser.specifications?.includes(name)) {
             setSelectedValue(name);
             return;
@@ -106,6 +121,28 @@ export default function CustomSelect(props) {
           dispatch(
             updateUser(currentUser?.id, {
               specifications: newSpecs,
+            })
+          );
+        } else if (renderType === SELECT_TYPE.PACKER) {
+          if (currentUser.packers?.includes(name)) {
+            setSelectedValue(name);
+            return;
+          }
+          const newSpecs = [...(currentUser.packers ?? []), name];
+          dispatch(
+            updateUser(currentUser?.id, {
+              packers: newSpecs,
+            })
+          );
+        } else if (renderType === SELECT_TYPE.SAMPLE) {
+          if (currentUser.samples?.includes(name)) {
+            setSelectedValue(name);
+            return;
+          }
+          const newSpecs = [...(currentUser.samples ?? []), name];
+          dispatch(
+            updateUser(currentUser?.id, {
+              samples: newSpecs,
             })
           );
         }
@@ -193,9 +230,7 @@ export default function CustomSelect(props) {
             </Row>
           </Option>
         ))}
-        {showPopUpModal && (
-          <Option value={SELECT_TYPE.NEW_TYPE}>Add New Option</Option>
-        )}
+        <Option value={SELECT_TYPE.NEW_TYPE}>Add New Option</Option>
       </Select>
     </>
   );

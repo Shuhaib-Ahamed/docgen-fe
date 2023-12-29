@@ -12,6 +12,7 @@ export const getFinance = createSelector(
   [orderSelect],
   (order) => order.finance
 );
+
 export const getShipping = createSelector(
   [orderSelect],
   (order) => order.shipping

@@ -60,7 +60,7 @@ const PreviewModal = (props) => {
   const invoiceRef = useRef(null);
   const packingRef = useRef(null);
   const salesRef = useRef(null);
-  const { importer, exporter, container, shipping, finance } =
+  const { importer, exporter, container, shipping, finance, surveys } =
     useSelector(getOrder);
 
   const onSubmit = () => {
@@ -111,6 +111,7 @@ const PreviewModal = (props) => {
                           container={container}
                           shipping={shipping}
                           finance={finance}
+                          surveys={surveys}
                         />
                       </div>
                     </div>
@@ -128,6 +129,7 @@ const PreviewModal = (props) => {
                           container={container}
                           shipping={shipping}
                           finance={finance}
+                          surveys={surveys}
                         />
                       </div>
                     </div>
@@ -145,6 +147,7 @@ const PreviewModal = (props) => {
                           container={container}
                           shipping={shipping}
                           finance={finance}
+                          surveys={surveys}
                         />
                       </div>
                     </div>
@@ -159,6 +162,7 @@ const PreviewModal = (props) => {
                       container={container}
                       shipping={shipping}
                       finance={finance}
+                      surveys={surveys}
                     />
                   </div>
                 );

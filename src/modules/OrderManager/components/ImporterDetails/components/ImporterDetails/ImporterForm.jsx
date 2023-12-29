@@ -20,8 +20,16 @@ import styles from "./importerForm.module.less";
 const { Option } = Select;
 
 const ImporterForm = forwardRef(({ setCurrentStep, onClose }, ref) => {
-  const { _id, importer, exporter, container, shipping, finance, isLoading } =
-    useSelector(getOrder);
+  const {
+    _id,
+    importer,
+    exporter,
+    container,
+    shipping,
+    finance,
+    surveys,
+    isLoading,
+  } = useSelector(getOrder);
   const { userLoading } = useSelector(selectAuth);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
@@ -61,6 +69,7 @@ const ImporterForm = forwardRef(({ setCurrentStep, onClose }, ref) => {
       container: container,
       shipping: shipping,
       finance: finance,
+      surveys: surveys,
     };
 
     if (orderObject._id) {

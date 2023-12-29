@@ -8,7 +8,7 @@ import { Col, Row } from "antd";
 import styles from "./packing.module.less";
 import { convertDate, getFormattedDate } from "@/utils/helpers";
 
-const PackingInstrictions = ({ importer, finance, shipping, container }) => {
+const PackingInstrictions = ({ finance, shipping, container, surveys }) => {
   return (
     <div className={styles.pdfContainer}>
       <Header />
@@ -34,7 +34,7 @@ const PackingInstrictions = ({ importer, finance, shipping, container }) => {
                 <Col span={24}>
                   <h4 className={styles.label}>PACKER : </h4>
                   <p contentEditable className={styles.text}>
-                    PB SEEDS
+                    {finance.packer}
                   </p>
                 </Col>
               </Row>
@@ -498,43 +498,52 @@ const PackingInstrictions = ({ importer, finance, shipping, container }) => {
             <Col span={12}>
               <Row>
                 <Col span={24}>
-                  <p contentEditable className={styles.label}>
-                    SEND 1KG SAMPLE TO :
-                  </p>
-                  <p contentEditable className={styles.text}>
-                    AMSPEC
-                  </p>
-                  <p contentEditable className={styles.text}>
-                    9 BROCK STREET,
-                  </p>
-                  <p contentEditable className={styles.text}>
-                    PORT ADELIADE SOUTH, AUSTRALIA 5015
-                  </p>
-                  <Row>
-                    <Col span={8}>
-                      <p className={styles.label}>CONTACT NAME :</p>
-                    </Col>
-                    <Col span={16}>
-                      <p contentEditable className={styles.text}>
-                        ALINA WHISTON /LEE SHILVOCK
-                      </p>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col span={4}>
-                      <p contentEditable className={styles.label}>
-                        EMAIL
-                      </p>
-                    </Col>
-                    <Col>
-                      <p contentEditable className={styles.text}>
-                        ALINA.WHISTON@AMSPECGROUP.COM
-                      </p>{" "}
-                      <p contentEditable className={styles.text}>
-                        LEE.SHILVOCK@AMSPECGROUP.COM
-                      </p>
-                    </Col>
-                  </Row>
+                  {finance.sample && (
+                    <p contentEditable className={styles.label}>
+                      {finance.sample}
+                    </p>
+                  )}
+                  {surveys.companyName && (
+                    <p contentEditable className={styles.text}>
+                      {surveys.companyName}
+                    </p>
+                  )}{" "}
+                  {surveys.addressNo && (
+                    <p contentEditable className={styles.text}>
+                      {surveys.addressNo}
+                    </p>
+                  )}
+                  {(surveys.address || surveys.country) && (
+                    <p contentEditable className={styles.text}>
+                      {surveys.address}, {surveys.country}
+                    </p>
+                  )}
+                  {surveys.contactName && (
+                    <Row>
+                      <Col span={8}>
+                        <p className={styles.label}>CONTACT NAME :</p>
+                      </Col>
+                      <Col span={16}>
+                        <p contentEditable className={styles.text}>
+                          {surveys.contactName}
+                        </p>
+                      </Col>
+                    </Row>
+                  )}
+                  {surveys.contactEmail && (
+                    <Row>
+                      <Col span={4}>
+                        <p contentEditable className={styles.label}>
+                          EMAIL
+                        </p>
+                      </Col>
+                      <Col>
+                        <p contentEditable className={styles.text}>
+                          {surveys.contactEmail}
+                        </p>{" "}
+                      </Col>
+                    </Row>
+                  )}
                   <Row>
                     <Col span={24}>
                       <p contentEditable className={styles.label}>

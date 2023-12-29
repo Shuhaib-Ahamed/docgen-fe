@@ -1,15 +1,26 @@
 import { Button, Col, Divider, Form, Input, Row, Select } from "antd";
-import React, { Fragment, useEffect, useState } from "react";
-import { expDetails } from "../constants/constants";
+import React, {
+  Fragment,
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+} from "react";
 import { countries } from "@/utils/countries";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  addSurveyDetails,
+  createOrder,
+  updateOrder,
+} from "@/redux/order/actions";
 import { getOrder } from "@/redux/order/selectors";
 import { isEmpty } from "lodash";
-import { createOrder, updateOrder } from "@/redux/order/actions";
-const { Option } = Select;
-import styles from "./exporterForm.module.less";
+import { selectAuth } from "@/redux/auth/selectors";
 
-const ExporterForm = ({ setCurrentStep, onClose }) => {
+import styles from "./surveyorForm.module.less";
+
+const { Option } = Select;
+
+const SurveyorForm = forwardRef(({ setCurrentStep, onClose }, ref) => {
   const {
     _id,
     importer,
@@ -20,11 +31,33 @@ const ExporterForm = ({ setCurrentStep, onClose }) => {
     surveys,
     isLoading,
   } = useSelector(getOrder);
+  const { userLoading } = useSelector(selectAuth);
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
-  const onFinish = () => {
-    setCurrentStep(1);
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        resetForm() {
+          form?.resetFields();
+        },
+      };
+    },
+    []
+  );
+
+  const onFinish = (values) => {
+    if (userLoading) {
+      return;
+    }
+
+    try {
+      dispatch(addSurveyDetails({ ...values }));
+    } catch (error) {
+    } finally {
+      setCurrentStep(3);
+    }
   };
 
   const handleOnClose = () => {
@@ -48,29 +81,32 @@ const ExporterForm = ({ setCurrentStep, onClose }) => {
     onClose();
   };
 
-  useEffect(() => {
-    if (!isEmpty(exporter)) {
-      form.setFieldsValue({
-        companyName: exporter.companyName,
-        attendee: exporter.attendee,
-        addressNo: exporter.addressNo,
-        address: exporter.address,
-        email: exporter.email,
-        country: exporter.country,
-        phoneNo: exporter.phoneNo,
-      });
+  const handleBack = () => {
+    setCurrentStep(1);
+  };
+
+  const validateEmail = (rule, value, callback) => {
+    const emailRegex = /^[A-Za-z0-9+_.-]+@(.+)$/;
+    if (!emailRegex.test(value)) {
+      callback("Invalid email address");
     } else {
+      callback();
+    }
+  };
+
+  useEffect(() => {
+    if (!isEmpty(surveys)) {
       form.setFieldsValue({
-        companyName: expDetails.companyName,
-        attendee: expDetails.attendee,
-        addressNo: expDetails.addressNo,
-        address: expDetails.address,
-        email: expDetails.email,
-        country: expDetails.country,
-        phoneNo: expDetails.phoneNo,
+        companyName: surveys.companyName,
+        addressNo: surveys.addressNo,
+        address: surveys.address,
+        country: surveys.country,
+        contactEmail: surveys.contactEmail,
+        contactName: surveys.contactName,
+        sample: surveys.sample,
       });
     }
-  }, []);
+  }, [surveys]);
 
   return (
     <Fragment>
@@ -81,7 +117,7 @@ const ExporterForm = ({ setCurrentStep, onClose }) => {
         disabled={isLoading}
       >
         <Row gutter={32}>
-          <Col span={18}>
+          <Col span={24}>
             <Form.Item
               label="Company Name"
               name="companyName"
@@ -94,22 +130,9 @@ const ExporterForm = ({ setCurrentStep, onClose }) => {
               <Input autoComplete="off" />
             </Form.Item>
           </Col>{" "}
-          <Col span={6}>
-            <Form.Item
-              label="Attendee Name"
-              name="attendee"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input autoComplete="off" />
-            </Form.Item>
-          </Col>
         </Row>{" "}
         <Row gutter={32}>
-          <Col span={6}>
+          <Col span={4}>
             <Form.Item
               label="Address No"
               name="addressNo"
@@ -122,7 +145,7 @@ const ExporterForm = ({ setCurrentStep, onClose }) => {
               <Input autoComplete="off" />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col span={14}>
             <Form.Item
               label="Street Address"
               name="address"
@@ -165,25 +188,12 @@ const ExporterForm = ({ setCurrentStep, onClose }) => {
               </Select>
             </Form.Item>{" "}
           </Col>
-        </Row>
+        </Row>{" "}
         <Row gutter={32}>
           <Col span={12}>
             <Form.Item
-              label="Email"
-              name="email"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input type="email" autoComplete="off" />
-            </Form.Item>
-          </Col>{" "}
-          <Col span={12}>
-            <Form.Item
-              label="Phone Number"
-              name="phoneNo"
+              label="Contact Name"
+              name="contactName"
               rules={[
                 {
                   required: true,
@@ -192,22 +202,67 @@ const ExporterForm = ({ setCurrentStep, onClose }) => {
             >
               <Input autoComplete="off" />
             </Form.Item>
-          </Col>
-        </Row>
+          </Col>{" "}
+          <Col span={12}>
+            <Form.Item
+              label="Email"
+              name="contactEmail"
+              rules={[
+                { required: true, message: "Email is required" },
+                { validator: validateEmail },
+              ]}
+            >
+              <Input type="email" autoComplete="off" />
+            </Form.Item>
+          </Col>{" "}
+        </Row>{" "}
+        <Row gutter={32}>
+          <Col span={24}>
+            <Form.Item
+              label="Packer Description"
+              name="sample"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input autoComplete="off" />
+            </Form.Item>
+          </Col>{" "}
+        </Row>{" "}
         <div className={styles.buttonContainer}>
           <Divider />
+          <Row gutter={24}>
+            <Col span={4}>
+              <Button
+                className={styles.nextButton}
+                onClick={() => handleBack()}
+              >
+                Back
+              </Button>
+            </Col>
+            <Col span={20}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className={styles.nextButton}
+              >
+                Next
+              </Button>
+            </Col>
+          </Row>
           <Button
-            type="primary"
-            htmlType="submit"
-            className={styles.nextButton}
+            loading={userLoading}
+            disabled={userLoading}
+            onClick={() => handleOnClose()}
           >
-            Next
+            Save as draft & close
           </Button>
-          <Button onClick={() => handleOnClose()}>Save as draft & close</Button>
         </div>
       </Form>
     </Fragment>
   );
-};
+});
 
-export default ExporterForm;
+export default SurveyorForm;
