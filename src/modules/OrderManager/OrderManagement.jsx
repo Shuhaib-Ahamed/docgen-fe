@@ -94,8 +94,8 @@ const OrderManagement = () => {
       dataIndex: "importer",
       key: "importer",
       render: (_, data) => {
-        const findCountry = countries.find(
-          (item) => item.name.common === data.importer.country
+        const findCountry = countries?.find(
+          (item) => item.name.common === data?.importer?.country
         );
 
         if (isUndefined(findCountry)) {
@@ -122,14 +122,14 @@ const OrderManagement = () => {
       dataIndex: "createdAt",
       key: "createdAt",
       sorter: (a, b) =>
-        new Date(a.createdAt).getDate() - new Date(b.createdAt).getDate(),
+        new Date(a?.createdAt).getDate() - new Date(b?.createdAt).getDate(),
       render: (_, data) => convertDate(data?.createdAt),
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      sorter: (a, b) => a.status - b.status,
+      sorter: (a, b) => a?.status - b?.status,
       render: (_, data) => (
         <Tag color={data.status === "DRAFT" ? "#108ee9" : "#87d068"}>
           {data.status}
