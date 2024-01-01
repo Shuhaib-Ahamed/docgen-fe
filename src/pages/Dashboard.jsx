@@ -113,8 +113,8 @@ export default function Dashboard() {
       key: "importer",
       render: (_, data) => {
         console.log(data);
-        const findCountry = countries.find(
-          (item) => item.name.common === data.importer.country
+        const findCountry = countries?.find(
+          (item) => item.name.common === data.importer?.country
         );
 
         if (isUndefined(findCountry)) {
