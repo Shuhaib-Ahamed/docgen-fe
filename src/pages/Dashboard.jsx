@@ -112,7 +112,6 @@ export default function Dashboard() {
       dataIndex: "importer",
       key: "importer",
       render: (_, data) => {
-        console.log(data);
         const findCountry = countries?.find(
           (item) => item.name.common === data.importer?.country
         );
@@ -244,17 +243,6 @@ export default function Dashboard() {
             </div>
 
             <RecentTable entity={"order"} dataTableColumns={orderColumns} />
-          </div>
-        </Col>
-
-        <Col className="gutter-row" span={12}>
-          <div className="whiteBox">
-            <div className="pad20">
-              <h3 style={{ color: "#22075e", marginBottom: 5 }}>
-                Recent Products
-              </h3>
-            </div>
-            <RecentTable entity={"product"} dataTableColumns={productColumns} />
           </div>
         </Col>
       </Row>
