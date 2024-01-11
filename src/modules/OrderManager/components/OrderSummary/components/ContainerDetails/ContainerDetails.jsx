@@ -31,6 +31,7 @@ const ContainerDetails = forwardRef((props, ref) => {
   );
 
   const onDateChange = (date) => {
+    dispatch(addContainerDetails({ ...container, releaseDate: date }));
     setReleaseDate(date);
   };
 
@@ -62,7 +63,7 @@ const ContainerDetails = forwardRef((props, ref) => {
         releaseDate: container?.releaseDate,
       });
 
-      setReleaseDate(container?.releaseDate);
+      setReleaseDate(new Date(container?.releaseDate));
     }
   }, []);
 

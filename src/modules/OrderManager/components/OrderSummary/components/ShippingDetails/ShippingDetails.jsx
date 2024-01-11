@@ -41,6 +41,7 @@ const ShippingDetails = forwardRef((props, ref) => {
 
   const onDateChange = (date) => {
     setDepartureDate(date);
+    dispatch(addShippmentDetails({ ...shipping, departureDate: date }));
   };
 
   const onFinish = (values) => {
@@ -81,14 +82,18 @@ const ShippingDetails = forwardRef((props, ref) => {
 
   const onClear = () => {
     const emptyValues = {
-      shippingCompany: undefined,
-      shippingContactName: undefined,
-      shippingContactNo: undefined,
+      shippingCompany: "",
+      shippingContactName: "",
+      shippingContactNo: "",
     };
     dispatch(addShippmentDetails({ ...shipping, ...emptyValues }));
   };
 
   useEffect(() => {
+    setInitialValues();
+  }, [shipping]);
+
+  const setInitialValues = () => {
     if (!isEmpty(shipping)) {
       form?.setFieldsValue({
         shippingCompany: shipping?.shippingCompany,
@@ -103,10 +108,10 @@ const ShippingDetails = forwardRef((props, ref) => {
         portLoadCountry: shipping?.portLoadCountry,
         portDischargeCountry: shipping?.portDischargeCountry,
         transshipment: shipping?.transshipment,
-        departureDate: new Date(shipping?.departureDate),
+        departureDate: shipping?.departureDate,
       });
 
-      setDepartureDate(shipping?.departureDate);
+      setDepartureDate(new Date(shipping?.departureDate));
       setDischargeCountry(shipping?.portDischargeCountry);
       setLoadCountry(shipping?.portLoadCountry);
       setTransCountry(shipping?.transshipment);
@@ -118,7 +123,7 @@ const ShippingDetails = forwardRef((props, ref) => {
       setDischargeCountry(portLoadCountry);
       setLoadCountry(portDischargeCountry);
     }
-  }, [shipping]);
+  };
 
   return (
     <Form
@@ -136,7 +141,7 @@ const ShippingDetails = forwardRef((props, ref) => {
           placeholder="Select Shipper"
           allowClear
           showSearch
-          onClear={onClear}
+          onClear={() => onClear()}
           onChange={(value) => setShipper(value)}
           loading={userLoading}
         >

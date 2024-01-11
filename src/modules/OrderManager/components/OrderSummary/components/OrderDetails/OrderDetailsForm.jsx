@@ -26,6 +26,7 @@ const OrderDetailsForm = ({
     shipping: orderShipping,
     finance: orderFinance,
     isLoading: isOrderLoading,
+    surveys: surveys,
   } = useSelector(getOrder);
   const dispatch = useDispatch();
   const shippingDetailsFormRef = useRef(null);
@@ -42,6 +43,7 @@ const OrderDetailsForm = ({
       container: orderContainer,
       shipping: orderShipping,
       finance: orderFinance,
+      surveys: surveys,
     };
 
     if (orderObject._id) {
