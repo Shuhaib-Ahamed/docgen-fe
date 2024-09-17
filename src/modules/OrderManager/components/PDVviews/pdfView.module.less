@@ -1,0 +1,69 @@
+.viewContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  .marginTopContainer {
+    margin-top: 4rem;
+  }
+
+  .headerTag {
+    font-size: 20px;
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .subContainer {
+    padding: 12px 24px;
+
+    .wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+
+      margin: 12px 0px 24px 0px !important;
+      .pdf {
+        overflow: hidden;
+        display: block;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+        border-radius: 3px;
+
+        .a4Pdf {
+          background: #fff;
+          width: 21cm;
+          height: 29.7cm;
+          display: block;
+          margin: 0 auto;
+          margin-bottom: 0.1cm;
+        }
+        .a3Pdf {
+          background: #fff;
+          width: 29.7cm;
+          height: 42cm;
+          display: block;
+          margin: 0 auto;
+          margin-bottom: 0.1cm;
+        }
+      }
+    }
+
+    .heading {
+      text-align: center;
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+  }
+
+  .buttonContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 6px 0px;
+
+    .nextButton {
+      width: 100%;
+    }
+  }
+}
